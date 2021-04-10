@@ -18,6 +18,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('login', function() {
+Route::get('login', function() {
     echo 'asd';
 })->name('login');
+Route::post('login', [AuthController::class, 'login'])->name('login.post');
