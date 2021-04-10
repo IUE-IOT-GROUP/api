@@ -18,4 +18,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('login', function() {
+    echo 'asd';
+})->name('login');
