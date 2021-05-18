@@ -26,5 +26,10 @@ class DatabaseSeeder extends Seeder
              'email' => 'erel@ozturk.com',
              'password' => \Hash::make('1234')
          ]);
+
+        $this->call([
+            PlaceSeeder::class,
+            DeviceSeeder::class,
+        ]);
     }
 }

@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    /**
+     * @throws ValidationException
+     */
+    public function login(Request $request): string
     {
         $request->validate([
             'email' => 'required',
@@ -20,15 +22,15 @@ class AuthController extends Controller
 
         try {
             $user = User::where('email', $request->email)->firstOrFail();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw ValidationException::withMessages([
-                'email' => 'The provided credentials are incorrect'
+                'email' => 'The given email does not exists.'
             ]);
         }
 
         if (!\Hash::check($request->password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => 'The provided credentials are incorrect'
+                'email' => 'The provided credentials are incorrect.'
             ]);
         }
 

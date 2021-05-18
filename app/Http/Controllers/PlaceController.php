@@ -13,7 +13,6 @@ class PlaceController extends Controller
     {
         return new PlaceCollection(
             $request->user()->places()->whereParentId(null)->get()
-//            Place::whereParentId(null)->get()
         );
     }
 
@@ -48,7 +47,27 @@ class PlaceController extends Controller
 
     public function update(Request $request, Place $place)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'parent' => ['nullable', 'exists:places,id']
+        ]);
+
+        if ($request->parent)
+        {
+            $parentPlace = Place::findOrFail($request->parent);
+            $place = $place->update([
+                'name' => $request->name,
+                'parent_id' => $parentPlace->id
+            ]);
+        }
+        else
+        {
+            $place->update([
+                'name' => $request->name
+            ]);
+        }
+
+        return new PlaceResource($place);
     }
 
     public function destroy(Place $place)

@@ -15,3 +15,4 @@ class PlaceResource extends JsonResource
         ];
     }
 }
+
