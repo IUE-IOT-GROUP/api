@@ -6,12 +6,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
-Route::group(['prefix' => 'v1'], function() {
-    Route::post('login', [AuthController::class, 'login'])->name('api.login');
+Route::post('login', [AuthController::class, 'login'])->name('api.login');
 
-    Route::group(['middleware' => 'auth:sanctum'], function() {
-        Route::get('me', [ProfileController::class, 'index']);
-        Route::apiResource('users', UserController::class);
-        Route::apiResource('places', PlaceController::class);
-    });
+Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::get('me', [ProfileController::class, 'index']);
+    Route::apiResource('users', UserController::class);
+    Route::apiResource('places', PlaceController::class);
 });
