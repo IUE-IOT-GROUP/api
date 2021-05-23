@@ -12,7 +12,7 @@ class AuthController extends Controller
     /**
      * @throws ValidationException
      */
-    public function login(Request $request): string
+    public function login(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
             'email' => 'required',
