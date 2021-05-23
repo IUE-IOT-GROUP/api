@@ -11,6 +11,7 @@ class PlaceResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'parent_id' => $this->parent_id,
             'places' => PlaceResource::collection($this->children)
         ];
     }
