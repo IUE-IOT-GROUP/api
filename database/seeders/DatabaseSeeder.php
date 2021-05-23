@@ -27,6 +27,12 @@ class DatabaseSeeder extends Seeder
              'password' => \Hash::make('1234')
          ]);
 
+        User::create([
+            'name' => 'berkin',
+            'email' => 'berkin.yildiran@yahoo.com',
+            'password' => \Hash::make('1234')
+        ]);
+
         $this->call([
             PlaceSeeder::class,
             DeviceSeeder::class,
