@@ -18,7 +18,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/s', function() {
+    echo Hash::make('wm785365');
+});
+
 Route::get('login', function() {
-    echo 'asd';
+     abort(500, 'asd');
 })->name('login');
 Route::post('login', [AuthController::class, 'login'])->name('login.post');

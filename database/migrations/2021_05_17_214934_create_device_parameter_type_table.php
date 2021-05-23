@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUserDevicesTable extends Migration
+class CreateDeviceParameterTypeTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,11 @@ class CreateUserDevicesTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_devices', function (Blueprint $table) {
+        Schema::create('device_parameter_type', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
             $table->foreignId('device_id')->constrained('devices');
-            $table->foreignId('place_id')->constrained('places');
-            $table->macAddress('mac_address');
-            $table->ipAddress('ip_address');
-            $table->timestamps();
+            $table->foreignId('parameter_type_id')->constrained('parameter_types');
+            $table->string('expected_parameter')->nullable();
         });
     }
 
@@ -31,6 +28,6 @@ class CreateUserDevicesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user_devices');
+        Schema::dropIfExists('device_parameter_type');
     }
 }
