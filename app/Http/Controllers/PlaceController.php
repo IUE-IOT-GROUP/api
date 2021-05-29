@@ -74,6 +74,7 @@ class PlaceController extends Controller
     {
         $place->children()->delete();
         $place->devices()->delete();
+        $place->delete();
 
         return response()->json(['success' => true]);
     }
