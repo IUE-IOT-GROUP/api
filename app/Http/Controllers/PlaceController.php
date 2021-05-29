@@ -72,6 +72,9 @@ class PlaceController extends Controller
 
     public function destroy(Place $place)
     {
-        //
+        $place->children()->delete();
+        $place->devices()->delete();
+
+        return response()->json(['success' => true]);
     }
 }
