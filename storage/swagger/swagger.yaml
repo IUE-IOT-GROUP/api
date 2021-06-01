@@ -1,0 +1,532 @@
+openapi: 3.0.0
+info:
+  title: Laravel
+  description: Documentation for the Application API
+  version: 1.0.0
+servers:
+  - url: 'https://ims.local'
+    description: 'Laravel Server #1'
+  - url: 'https://ims.local'
+    description: Demo Server
+paths:
+  /api/login:
+    post:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: User is logged in.
+          content:
+            application/json:
+              schema:
+                type: array
+                properties:
+                  id:
+                    type: integer
+                  username:
+                    type: string
+                  email:
+                    type: string
+                  token:
+                    type: string
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+                - password
+                - device_name
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                device_name:
+                  type: string
+  /api/me:
+    get:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+  /api/devices/data:
+    post:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+  /api/userDevices:
+    get:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+    post:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+  '/api/userDevices/{userDevice}':
+    get:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: userDevice
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    put:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: userDevice
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    patch:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: userDevice
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    delete:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: userDevice
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+  /api/devices:
+    get:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+    post:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+  '/api/devices/{device}':
+    get:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: device
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    put:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: device
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    patch:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: device
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    delete:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: device
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+  /api/users:
+    get:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+    post:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+  '/api/users/{user}':
+    get:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    put:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    patch:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    delete:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: user
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+  /api/places:
+    get:
+      summary: Title of the route
+      description: This is a longer description for the route which will be visible once the panel is expanded
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+    post:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+  '/api/places/{place}':
+    get:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: place
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    put:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: place
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    patch:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: place
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    delete:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: place
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+  '/api/places/{place}/userDevices':
+    get:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: place
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    post:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: place
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+  '/api/places/{place}/userDevices/{userDevice}':
+    get:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: place
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+        - name: userDevice
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    put:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: place
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+        - name: userDevice
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    patch:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: place
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+        - name: userDevice
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+    delete:
+      summary: ''
+      description: ''
+      deprecated: false
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: (Unauthorized) Invalid or missing Access Token
+      parameters:
+        - name: place
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+        - name: userDevice
+          in: path
+          required: true
+          description: ''
+          schema:
+            type: string
+tags:
+  - name: Authentication
+  - name: User Devices
+  - name: Places
+  - name: Devices
