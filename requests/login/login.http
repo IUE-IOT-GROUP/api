@@ -1,0 +1,11 @@
+POST {{url}}/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}",
+  "device_name": "{{device_name}}"
+}
+
+> {% client.global.set("auth_token", response.body.token); %}

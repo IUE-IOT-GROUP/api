@@ -1,0 +1,8 @@
+POST {{url}}/places
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Erel's Place"
+}

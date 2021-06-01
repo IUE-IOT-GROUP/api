@@ -1,0 +1,22 @@
+GET {{url}}/places/1
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 404, "Response status is 404");
+    });
+%}
+
+###
+GET {{url}}/places/5
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+Accept: application/json
+
+> {%
+    client.test("Request executed successfully", function () {
+        client.assert(response.status === 200, "Response status is 200");
+    });
+%}
