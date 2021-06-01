@@ -43,18 +43,18 @@ class DeviceSeeder extends Seeder
         $device = Device::create([
             'name' => 'DHT 11',
         ]);
-        $device->parameters()->sync([
-            $p1->id => ['expected_parameter' => 'temperature'],
-            $p2->id => ['expected_parameter' => 'temperature'],
-            $p3->id => ['expected_parameter' => 'humidity']
-        ]);
+//        $device->parameters()->sync([
+//            $p1->id => ['expected_parameter' => 'temperature'],
+//            $p2->id => ['expected_parameter' => 'temperature'],
+//            $p3->id => ['expected_parameter' => 'humidity']
+//        ]);
 
         $device = Device::create([
             'name' => 'HC-SR04',
         ]);
-        $device->parameters()->sync([
-            $p4->id => ['expected_parameter' => 'distance'],
-            $p5->id => ['expected_parameter' => 'distance']
-        ]);
+//        $device->parameters()->sync([
+//            $p4->id => ['expected_parameter' => 'distance'],
+//            $p5->id => ['expected_parameter' => 'distance']
+//        ]);
     }
 }

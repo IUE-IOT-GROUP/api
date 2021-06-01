@@ -1,0 +1,22 @@
+POST {{url}}/userDevices
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "place_id": "5",
+    "mac_address": "aa:aa:aa:aa:ab",
+    "ip_address": "192.168.0.25",
+    "name": "Erel's device in place 5",
+    "device_id": "1",
+    "parameters": {
+        "distance": {
+            "name": "Distance",
+            "unit": "meter"
+        },
+        "humidity": {
+            "name": "Humidity",
+            "unit": "percent"
+        }
+    }
+}

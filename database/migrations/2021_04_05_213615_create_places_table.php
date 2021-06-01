@@ -19,6 +19,7 @@ class CreatePlacesTable extends Migration
             $table->foreignId('user_id')->nullable()->constrained('users');
             $table->foreignId('parent_id')->nullable()->constrained('places');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

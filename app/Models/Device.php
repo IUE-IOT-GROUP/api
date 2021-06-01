@@ -13,8 +13,4 @@ class Device extends Model
 
     protected $guarded = ['id'];
 
-    public function parameters()
-    {
-        return $this->belongsToMany(ParameterType::class)->as('parameters')->using(DeviceParameterType::class);
-    }
 }

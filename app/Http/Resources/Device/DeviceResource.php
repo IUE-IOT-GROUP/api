@@ -1,17 +1,21 @@
 <?php
 
-namespace App\Http\Resources\User;
+namespace App\Http\Resources\Device;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+/** @mixin \App\Models\Device */
+class DeviceResource extends JsonResource
 {
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @return array
+     */
     public function toArray($request)
     {
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->email
         ];
     }
 }
