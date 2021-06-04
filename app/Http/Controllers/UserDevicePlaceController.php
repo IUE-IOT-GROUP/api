@@ -12,7 +12,7 @@ class UserDevicePlaceController extends Controller
     public function index(Request $request, Place $place)
     {
         $devices = $request->user()->devices()->where('place_id', $place->id)
-            ->with(['device'])
+            ->with(['device', 'parameters', 'place'])
             ->get();
 
         return UserDeviceResource::collection($devices);

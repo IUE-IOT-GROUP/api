@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\Device\DeviceResource;
 use App\Http\Resources\UserDeviceResource;
 use App\Models\Device;
 use App\Models\ParameterType;
@@ -16,6 +17,8 @@ class UserDeviceController extends Controller
     public function index(Request $request)
     {
         $devices = $request->user()->devices;
+
+        return DeviceResource::collection($devices);
     }
 
     public function store(Request $request)
