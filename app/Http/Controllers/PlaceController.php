@@ -60,6 +60,7 @@ class PlaceController extends Controller
 
     public function show(Request $request, Place $place)
     {
+        $place->load('children');
         return new PlaceResource($place);
     }
 

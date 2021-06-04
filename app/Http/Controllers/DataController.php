@@ -10,11 +10,15 @@ class DataController extends Controller
 {
     public function index()
     {
-        //
+        abort(501);
     }
 
     public function store(Request $request)
     {
+        $request->validate([
+            'mac_address' => ['required', 'regex:/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/']
+        ]);
+
         if (filled($request->mac_address))
         {
             // get the device with the given mac address
@@ -45,21 +49,15 @@ class DataController extends Controller
                     }
                 }
             });
+
+            return $this->success();
         }
+
+        return $this->error('An error has occurred.', 400);
     }
 
-    public function show($id)
+    public function show(DeviceData $data)
     {
-        //
-    }
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    public function destroy($id)
-    {
-        //
+        abort(501);
     }
 }
