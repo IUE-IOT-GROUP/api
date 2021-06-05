@@ -16,7 +16,7 @@ class UserDeviceController extends Controller
 {
     public function index(Request $request)
     {
-        $devices = $request->user()->devices;
+        $devices = $request->user()->devices()->with(['device', 'parameters', 'place'])->get();
 
         return DeviceResource::collection($devices);
     }

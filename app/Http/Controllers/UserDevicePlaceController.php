@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserDeviceResource;
 use App\Models\Place;
-use App\Models\UserDevice;
 use Illuminate\Http\Request;
 
 class UserDevicePlaceController extends Controller
