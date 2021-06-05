@@ -18,7 +18,7 @@ class UserDeviceController extends Controller
     {
         $devices = $request->user()->devices()->with(['device', 'parameters', 'place'])->get();
 
-        return DeviceResource::collection($devices);
+        return UserDeviceResource::collection($devices);
     }
 
     public function store(Request $request)
