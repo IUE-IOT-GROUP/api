@@ -46,6 +46,7 @@ class PlaceController extends Controller
             $parentPlace = Place::findOrFail($request->parent);
             $place = $parentPlace->children()->create([
                 'name' => $request->name,
+                'user_id' => $request->user()->id,
             ]);
         }
         else
