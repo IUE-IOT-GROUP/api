@@ -4,7 +4,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "mac_address": "00-15-5D-69-09-40",
-    "ali": "31",
-    "veli": "62"
+    "mac_address": "3C-F0-11-3F-B3-D6",
+    "temperature": "31",
+    "humidity": "92",
+    "distance": "45"
 }

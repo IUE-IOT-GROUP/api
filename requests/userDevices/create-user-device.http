@@ -4,19 +4,19 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "place_id": "3",
-    "mac_address": "00-15-5D-69-09-40",
-    "ip_address": "192.168.0.26",
+    "place_id": "2",
+    "mac_address": "3C-F0-11-3F-B3-D6",
+    "ip_address": "192.168.0.25",
     "name": "Arduino-DHT11",
     "device_id": "1",
     "parameters": {
-        "ali": {
-            "name": "Alibebe",
-            "unit": "asd"
+        "temperature": {
+            "name": "Temperature",
+            "unit": "centigratee"
         },
-        "veli": {
-            "name": "Velihaha",
-            "unit": "bsd"
+        "humidity": {
+            "name": "Humidity",
+            "unit": "percent"
         }
     }
 }

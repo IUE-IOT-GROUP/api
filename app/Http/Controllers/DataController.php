@@ -68,7 +68,7 @@ class DataController extends Controller
                     'unit' => $type->unit,
                     'expected_parameter' => $type->parameters->expected_parameter
                 ],
-                'data' => DeviceDataResource::collection(DeviceData::where('parameter_type_user_device_id', $type->parameters->id)->orderByDesc('created_at')->get()),
+                'data' => DeviceDataResource::collection(DeviceData::where('parameter_type_user_device_id', $type->parameters->id)->orderByDesc('created_at')->take(50)->get()),
             ];
         });
 
