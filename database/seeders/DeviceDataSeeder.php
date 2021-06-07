@@ -23,6 +23,7 @@ class DeviceDataSeeder extends Seeder
                         'parameter_type_user_device_id' => $parameter->parameters->id,
                         'user_device_id' => $device->id,
                         'value' => $faker->randomNumber(2),
+                        'created_at' => $faker->dateTimeBetween('-1 day')
                     ]);
                 }
             }
