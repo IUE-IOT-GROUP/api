@@ -62,15 +62,13 @@ class DataController extends Controller
     {
         $data = [];
         $device->parameters->each(function (ParameterType $type) use (&$data) {
-            $data[] = [
-                'data' => [
-                    'details' => [
-                        'name' => $type->name,
-                        'unit' => $type->unit,
-                        'expected_parameter' => $type->parameters->expected_parameter
-                    ],
-                    'data' => DeviceDataResource::collection(DeviceData::where('parameter_type_user_device_id', $type->parameters->id)->orderByDesc('created_at')->take(5)->get()),
-                ]
+            $data['data'][] = [
+                'details' => [
+                    'name' => $type->name,
+                    'unit' => $type->unit,
+                    'expected_parameter' => $type->parameters->expected_parameter
+                ],
+                'data' => DeviceDataResource::collection(DeviceData::where('parameter_type_user_device_id', $type->parameters->id)->orderByDesc('created_at')->take(5)->get()),
             ];
         });
 
