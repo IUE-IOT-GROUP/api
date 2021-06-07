@@ -37,6 +37,6 @@ class UserDevice extends Model
             ->as('parameters')
             ->withPivot('id', 'expected_parameter')
             ->withTimestamps()
-            ->using(UserDeviceParameterType::class);
+            ->using(ParameterTypeUserDevice::class);
     }
 }

@@ -88,7 +88,7 @@ class UserDeviceController extends Controller
 
     public function show(UserDevice $userDevice): UserDeviceResource
     {
-        $userDevice->load(['parameters', 'device', 'data', 'place']);
+        $userDevice->load(['parameters', 'device', 'place']);
 
         return new UserDeviceResource($userDevice);
     }

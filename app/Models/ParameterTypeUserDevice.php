@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class UserDeviceParameterType extends Pivot
+class ParameterTypeUserDevice extends Pivot
 {
     public $incrementing = true;
+    protected $table = 'parameter_type_user_device';
+    protected $with = ['device'];
 
     protected $guarded = ['id'];
 

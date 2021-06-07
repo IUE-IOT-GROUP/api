@@ -17,6 +17,6 @@ class ParameterType extends Model
             ->as('devices')
             ->withPivot('id', 'expected_parameter')
             ->withTimestamps()
-            ->using(UserDeviceParameterType::class);
+            ->using(ParameterTypeUserDevice::class);
     }
 }

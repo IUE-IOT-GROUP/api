@@ -10,6 +10,7 @@ class DeviceData extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+    protected $with = ['parameter', 'device'];
 
     public function device()
     {
@@ -18,6 +19,6 @@ class DeviceData extends Model
 
     public function parameter()
     {
-        return $this->hasOne(UserDeviceParameterType::class);
+        return $this->belongsTo(ParameterTypeUserDevice::class, 'parameter_type_user_device_id', 'id');
     }
 }

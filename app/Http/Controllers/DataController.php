@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\DeviceDataResource;
 use App\Models\DeviceData;
+use App\Models\ParameterType;
 use App\Models\UserDevice;
 use Illuminate\Http\Request;
 
@@ -16,7 +18,7 @@ class DataController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'mac_address' => ['required', 'regex:/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/']
+            'mac_address' => ['required', 'regex:/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/'],
         ]);
 
         if (filled($request->mac_address))
@@ -56,8 +58,20 @@ class DataController extends Controller
         return $this->error('An error has occurred.', 400);
     }
 
-    public function show(DeviceData $data)
+    public function show(UserDevice $device)
     {
-        abort(501);
+        $data = [];
+        $device->parameters->each(function (ParameterType $type) use (&$data) {
+            $data[$type->parameters->expected_parameter] = [
+                'details' => [
+                    'name' => $type->name,
+                    'unit' => $type->unit,
+                    'expected_parameter' => $type->parameters->expected_parameter
+                ],
+                'data' => DeviceDataResource::collection(DeviceData::where('parameter_type_user_device_id', $type->parameters->id)->orderByDesc('created_at')->get()),
+            ];
+        });
+
+        return response()->json($data);
     }
 }

@@ -15,14 +15,15 @@ Route::post('login', [AuthController::class, 'login'])->name('api.login');
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('me', [ProfileController::class, 'index']);
     Route::post('devices/data', [DataController::class, 'store']);
+    Route::get('devices/data/{device}', [DataController::class, 'show']);
     Route::apiResource('userDevices', UserDeviceController::class)->missing(function () {
-        return error('Place not found');
-    });;
+        return error('Device not found');
+    });
     Route::apiResource('devices', DeviceController::class)->missing(function () {
-        return error('Place not found');
-    });;
+        return error('Device not found');
+    });
     Route::apiResource('users', UserController::class)->missing(function () {
-        return error('Place not found');
+        return error('User not found');
     });;
     Route::apiResource('places', PlaceController::class)->missing(function () {
         return error('Place not found');
