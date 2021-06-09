@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\Device\DeviceResource;
 use App\Http\Resources\UserDeviceResource;
 use App\Models\Device;
 use App\Models\ParameterType;

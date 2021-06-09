@@ -23,7 +23,6 @@ class UserDeviceResource extends JsonResource
             'ip_address' => $this->ip_address,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'data_count' => $this->data_count,
             'parameters_count' => $this->parameters_count,
 
             'user_id' => $this->user_id,

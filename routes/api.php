@@ -16,19 +16,12 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('me', [ProfileController::class, 'index']);
     Route::post('devices/data', [DataController::class, 'store']);
     Route::get('devices/data/{device}', [DataController::class, 'show']);
-    Route::apiResource('userDevices', UserDeviceController::class)->missing(function () {
-        return error('Device not found');
-    });
-    Route::apiResource('devices', DeviceController::class)->missing(function () {
-        return error('Device not found');
-    });
-    Route::apiResource('users', UserController::class)->missing(function () {
-        return error('User not found');
-    });;
-    Route::apiResource('places', PlaceController::class)->missing(function () {
-        return error('Place not found');
-    });
-    Route::apiResource('places.userDevices', UserDevicePlaceController::class)->missing(function () {
-        return error('Place not found');
-    });
+
+    Route::apiResource('userDevices', UserDeviceController::class)->missing(fn () => error('User device not found'));
+    Route::apiResource('devices', DeviceController::class)
+        ->except(['destroy'])
+        ->missing(fn () => error('Device not found'));
+    Route::apiResource('users', UserController::class)->missing(fn () => error('User not found'));
+    Route::apiResource('places', PlaceController::class)->missing(fn () => error('Place not found'));
+    Route::apiResource('places.userDevices', UserDevicePlaceController::class)->missing(fn () => error('Place not found'));
 });

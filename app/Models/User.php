@@ -17,16 +17,24 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'is_admin'
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'is_admin'
     ];
 
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean'
     ];
+
+    public function isAdmin()
+    {
+        return $this->is_admin;
+    }
 
     public function places(): HasMany
     {

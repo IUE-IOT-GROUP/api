@@ -26,3 +26,9 @@ Route::get('login', function() {
      abort(500, 'asd');
 })->name('login');
 Route::post('login', [AuthController::class, 'login'])->name('login.post');
+
+Route::get('documentation', [\App\Http\Controllers\SwaggerController::class, 'index'])->name('documentation.index');
+Route::get('documentation/api', [\App\Http\Controllers\SwaggerController::class, 'api'])->name('documentation.api');
+
+
+Route::get('test', \App\Http\Controllers\TestController::class);

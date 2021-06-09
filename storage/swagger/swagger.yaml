@@ -1,26 +1,28 @@
 openapi: 3.0.0
 info:
-  title: Laravel
+  title: IoT Management System
   description: Documentation for the Application API
   version: 1.0.0
 servers:
+  - url: 'https://api.iot-ms.xyz'
   - url: 'https://ims.local'
-    description: 'Laravel Server #1'
-  - url: 'https://ims.local'
-    description: Demo Server
+security:
+  - bearerAuth: []
 paths:
   /api/login:
     post:
-      summary: ''
+      tags:
+        - "Authentication"
+      summary: 'Logs user into the system'
+      security: []
       description: ''
-      deprecated: false
       responses:
-        '200':
+        200:
           description: User is logged in.
           content:
             application/json:
               schema:
-                type: array
+                type: object
                 properties:
                   id:
                     type: integer
@@ -30,16 +32,10 @@ paths:
                     type: string
                   token:
                     type: string
-        '401':
-          description: (Unauthorized) Invalid or missing Access Token
       requestBody:
         content:
           application/json:
             schema:
-              required:
-                - email
-                - password
-                - device_name
               properties:
                 email:
                   type: string
@@ -47,6 +43,7 @@ paths:
                   type: string
                 device_name:
                   type: string
+        required: true
   /api/me:
     get:
       summary: ''
@@ -69,131 +66,193 @@ paths:
           description: (Unauthorized) Invalid or missing Access Token
   /api/userDevices:
     get:
-      summary: ''
+      tags:
+        - User Devices
+      summary: 'Returns all user devices'
       description: ''
-      deprecated: false
       responses:
-        '200':
+        200:
           description: OK
-        '401':
+          content:
+            application/json:
+              schema:
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/UserDevice'
+        401:
           description: (Unauthorized) Invalid or missing Access Token
     post:
-      summary: ''
+      tags:
+        - User Devices
+      summary: 'Adds a new user device'
       description: ''
-      deprecated: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDevice'
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDevice'
         '401':
           description: (Unauthorized) Invalid or missing Access Token
-  '/api/userDevices/{userDevice}':
+  '/api/userDevices/{userDeviceId}':
     get:
-      summary: ''
+      tags:
+        - User Devices
+      summary: 'Returns a single user device.'
       description: ''
-      deprecated: false
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDevice'
         '401':
           description: (Unauthorized) Invalid or missing Access Token
       parameters:
-        - name: userDevice
+        - name: userDeviceId
           in: path
           required: true
-          description: ''
+          description: 'ID of the user device'
           schema:
             type: string
     put:
-      summary: ''
+      tags:
+        - User Devices
+      summary: 'Updates given user device.'
       description: ''
       deprecated: false
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDevice'
       responses:
         '200':
           description: OK
         '401':
           description: (Unauthorized) Invalid or missing Access Token
       parameters:
-        - name: userDevice
+        - name: userDeviceId
           in: path
           required: true
-          description: ''
-          schema:
-            type: string
-    patch:
-      summary: ''
-      description: ''
-      deprecated: false
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: (Unauthorized) Invalid or missing Access Token
-      parameters:
-        - name: userDevice
-          in: path
-          required: true
-          description: ''
+          description: 'ID of the device'
           schema:
             type: string
     delete:
-      summary: ''
+      tags:
+        - User Devices
+      summary: 'Deletes the given user device along with its data and parameters.'
       description: ''
-      deprecated: false
       responses:
-        '200':
+        200:
           description: OK
-        '401':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: true
+        401:
           description: (Unauthorized) Invalid or missing Access Token
       parameters:
-        - name: userDevice
+        - name: userDeviceId
           in: path
           required: true
-          description: ''
+          description: 'ID of the device'
           schema:
-            type: string
+            type: integer
   /api/devices:
     get:
+      tags:
+      - Devices
       summary: ''
       description: ''
       deprecated: false
       responses:
-        '200':
+        200:
           description: OK
-        '401':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Device'
+        401:
           description: (Unauthorized) Invalid or missing Access Token
     post:
-      summary: ''
-      description: ''
-      deprecated: false
+      tags:
+        - Devices
+      summary: 'Creates a new device'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Device'
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
         '401':
           description: (Unauthorized) Invalid or missing Access Token
-  '/api/devices/{device}':
+  '/api/devices/{deviceId}':
     get:
-      summary: ''
-      description: ''
-      deprecated: false
+      tags:
+        - Devices
+      summary: 'Returns a device'
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
         '401':
           description: (Unauthorized) Invalid or missing Access Token
       parameters:
-        - name: device
+        - name: deviceId
           in: path
           required: true
-          description: ''
+          description: 'ID of the device'
           schema:
-            type: string
+            type: integer
     put:
-      summary: ''
-      description: ''
-      deprecated: false
+      tags:
+        - Devices
+      summary: 'Updates an existing device'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - name
+              type: object
+              properties:
+                name:
+                  type: string
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
         '401':
           description: (Unauthorized) Invalid or missing Access Token
       parameters:
@@ -202,44 +261,10 @@ paths:
           required: true
           description: ''
           schema:
-            type: string
-    patch:
-      summary: ''
-      description: ''
-      deprecated: false
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: (Unauthorized) Invalid or missing Access Token
-      parameters:
-        - name: device
-          in: path
-          required: true
-          description: ''
-          schema:
-            type: string
-    delete:
-      summary: ''
-      description: ''
-      deprecated: false
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: (Unauthorized) Invalid or missing Access Token
-      parameters:
-        - name: device
-          in: path
-          required: true
-          description: ''
-          schema:
-            type: string
+            type: integer
   /api/users:
     get:
       summary: ''
-      description: ''
-      deprecated: false
       responses:
         '200':
           description: OK
@@ -287,22 +312,6 @@ paths:
           description: ''
           schema:
             type: string
-    patch:
-      summary: ''
-      description: ''
-      deprecated: false
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: (Unauthorized) Invalid or missing Access Token
-      parameters:
-        - name: user
-          in: path
-          required: true
-          description: ''
-          schema:
-            type: string
     delete:
       summary: ''
       description: ''
@@ -321,18 +330,27 @@ paths:
             type: string
   /api/places:
     get:
-      summary: Title of the route
-      description: This is a longer description for the route which will be visible once the panel is expanded
-      deprecated: false
+      tags:
+        - Places
+      summary: Returns all places belonging to the user
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Place'
         '401':
           description: (Unauthorized) Invalid or missing Access Token
     post:
-      summary: ''
-      description: ''
-      deprecated: false
+      tags:
+        - Places
+      summary: 'Creates a new place.'
       responses:
         '200':
           description: OK
@@ -356,22 +374,6 @@ paths:
           schema:
             type: string
     put:
-      summary: ''
-      description: ''
-      deprecated: false
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: (Unauthorized) Invalid or missing Access Token
-      parameters:
-        - name: place
-          in: path
-          required: true
-          description: ''
-          schema:
-            type: string
-    patch:
       summary: ''
       description: ''
       deprecated: false
@@ -481,28 +483,6 @@ paths:
           description: ''
           schema:
             type: string
-    patch:
-      summary: ''
-      description: ''
-      deprecated: false
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: (Unauthorized) Invalid or missing Access Token
-      parameters:
-        - name: place
-          in: path
-          required: true
-          description: ''
-          schema:
-            type: string
-        - name: userDevice
-          in: path
-          required: true
-          description: ''
-          schema:
-            type: string
     delete:
       summary: ''
       description: ''
@@ -527,6 +507,119 @@ paths:
             type: string
 tags:
   - name: Authentication
-  - name: User Devices
+  - name: Users
   - name: Places
   - name: Devices
+  - name: User Devices
+components:
+  schemas:
+    UserDevice:
+      type: object
+      required:
+        - name
+        - place_id
+        - mac_address
+        - ip_address
+        - parameters
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        mac_address:
+          type: string
+        ip_address:
+          type: string
+        created_at:
+          type: string
+          readOnly: true
+        updated_at:
+          type: string
+          readOnly: true
+        parameters_count:
+          type: integer
+          readOnly: true
+        user_id:
+          type: integer
+          readOnly: true
+        device_id:
+          type: integer
+          description: If null, a new Device will be created with the `name`. If a device with the same `mac_address`, `ip_address`, `device_id` and `place_id` exists, it will fail.
+        place_id:
+          type: integer
+          description: ID of a place belonging to User
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+            minProperties: 1
+            properties:
+              name:
+                type: string
+              unit:
+                type: string
+        device:
+          type: object
+          readOnly: true
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+        place:
+          type: object
+          readOnly: true
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+    Device:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+    User:
+      required:
+        - name
+        - email
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        email:
+          type: string
+        phone_number:
+          type: string
+        created_at:
+          type: string
+          readOnly: true
+        updated_at:
+          type: string
+          readOnly: true
+    Place:
+      required:
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        parent:
+          type: integer
+          description: Nullable. Required only if you want to create a child place.
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
