@@ -61,7 +61,7 @@ class PlaceController extends Controller
 
     public function show(Request $request, Place $place)
     {
-        $place->load(['children', 'devices']);
+        $place->load(['children', 'devices', 'children.children', 'children.devices']);
 
         return new PlaceResource($place);
     }
