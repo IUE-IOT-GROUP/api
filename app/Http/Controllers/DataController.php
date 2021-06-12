@@ -127,7 +127,7 @@ class DataController extends Controller
             })
             ->orderByDesc('created_at');
 
-        $collectedData = DeviceDataResource::collection($query->take(10)->get());
+        $collectedData = DeviceDataResource::collection($query->get());
 
         $graphData = DeviceDataResource::collection(
             $query->when($request->get('period'), function ($query, $value) {
@@ -163,7 +163,7 @@ class DataController extends Controller
             'min_x' => $graphData->min('created_at'),
             'max_x' => $graphData->max('created_at'),
             'count' => $graphData->count(),
-            'data' => $collectedData,
+            'data' => $collectedData->take(10),
             'graphData' => $graphData,
         ];
 
