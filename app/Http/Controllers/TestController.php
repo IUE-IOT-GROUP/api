@@ -16,7 +16,7 @@ class TestController extends Controller
     public function add_device_data()
     {
         $since = Carbon::now()->subMonths();
-        $until = Carbon::now()->addHours(3);
+        $until = Carbon::now();
 
         $interval = collect(CarbonPeriod::since($since)->minutes(5)->until($until));
         $faker = Factory::create();
