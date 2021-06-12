@@ -1,4 +1,4 @@
-GET {{url}}/devices/data/1
+GET {{url}}/devices/data/1/1?period=daily
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 Accept: application/json

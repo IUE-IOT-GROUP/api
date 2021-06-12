@@ -19,7 +19,6 @@ class DeviceDataSeeder extends Seeder
         foreach ($user->devices as $device) {
             foreach ($device->parameters as $parameter)
             {
-
                 $since = Carbon::now()->startOfDay();
                 $until = Carbon::create(null, null, null, hour: 21);
 

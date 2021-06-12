@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('parameter_type_user_device', function (Blueprint $table) {
+        Schema::create('device_parameter', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->foreignId('user_device_id')->constrained('user_devices')->onDelete('cascade');
             $table->foreignId('parameter_type_id')->constrained('parameter_types');
@@ -18,6 +18,6 @@ return new class extends Migration {
 
     public function down()
     {
-        Schema::dropIfExists('parameter_type_user_device');
+        Schema::dropIfExists('device_parameter');
     }
 };

@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Resources\DeviceDataResource;
 use App\Models\DeviceData;
 use App\Models\ParameterType;
+use App\Models\DeviceParameter;
 use App\Models\UserDevice;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DataController extends Controller
@@ -62,7 +64,7 @@ class DataController extends Controller
     {
         $data = [];
         $device->parameters->each(function (ParameterType $type) use (&$data) {
-            $query = DeviceData::where('parameter_type_user_device_id', $type->parameters->id)
+            $query = DeviceData::where('device_parameter_id', $type->parameters->id)
                 ->orderByDesc('created_at')
                 ->take(24)
                 ->get();
@@ -71,6 +73,7 @@ class DataController extends Controller
 
             $data['data'][] = [
                 'details' => [
+                    'device_parameter_id' => $type->parameters->id,
                     'name' => $type->name,
                     'unit' => $type->unit,
                     'expected_parameter' => $type->parameters->expected_parameter
@@ -80,6 +83,54 @@ class DataController extends Controller
                 'data' => $collectedData,
             ];
         });
+
+        return response()->json($data);
+    }
+
+    public function showParameter(Request $request, UserDevice $device, DeviceParameter $type)
+    {
+        $data = [];
+//        $device->parameters->each(function (ParameterType $type) use (&$data) {
+            $query = DeviceData::query()
+                ->where('device_parameter_id', $type->id)
+                ->where('user_device_id', $device->id)
+                ->when($request->get('period'), function($query, $value) {
+                    switch($value) {
+                        case 'daily':
+                            $period = Carbon::now()->subDays();
+                            break;
+                        case 'weekly':
+                            $period = Carbon::now()->subDays(7);
+                            break;
+                        case 'monthly':
+                            $period = Carbon::now()->subDays(30);
+                            break;
+                        default:
+                            $period = Carbon::now()->subDays();
+                    }
+
+                    return $query->where('created_at', '>=', $period);
+                })
+                ->orderByDesc('created_at')
+                ->get();
+
+            $collectedData = DeviceDataResource::collection($query);
+
+            $data['data'] = [
+                'details' => [
+                    'device_parameter_id' => $type->id,
+                    'name' => $type->parameter->name,
+                    'unit' => $type->parameter->unit,
+                    'expected_parameter' => $type->expected_parameter
+                ],
+                'min_y' => $query->min('value'),
+                'max_y' => $query->max('value'),
+                'min_x' => $query->min('created_at'),
+                'max_x' => $query->max('created_at'),
+                'count' => $query->count(),
+                'data' => $collectedData,
+            ];
+//        });
 
         return response()->json($data);
     }

@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\ParameterTypeUserDevice */
+/** @mixin \App\Models\DeviceParameter */
 class ParameterTypeUserDeviceResource extends JsonResource
 {
     /**

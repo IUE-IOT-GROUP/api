@@ -19,6 +19,6 @@ class DeviceData extends Model
 
     public function parameter()
     {
-        return $this->belongsTo(ParameterTypeUserDevice::class, 'parameter_type_user_device_id', 'id');
+        return $this->belongsTo(DeviceParameter::class, 'parameter_type_user_device_id', 'id');
     }
 }

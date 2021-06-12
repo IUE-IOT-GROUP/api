@@ -4,10 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class ParameterTypeUserDevice extends Pivot
+class DeviceParameter extends Pivot
 {
+    const TABLE_NAME = 'device_parameter';
     public $incrementing = true;
-    protected $table = 'parameter_type_user_device';
     protected $with = ['device'];
 
     protected $guarded = ['id'];
@@ -17,7 +17,7 @@ class ParameterTypeUserDevice extends Pivot
         return $this->belongsTo(UserDevice::class, 'user_device_id');
     }
 
-    public function parameterType()
+    public function parameter()
     {
         return $this->belongsTo(ParameterType::class, 'parameter_type_id');
     }

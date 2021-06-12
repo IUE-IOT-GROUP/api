@@ -33,10 +33,10 @@ class UserDevice extends Model
 
     public function parameters()
     {
-        return $this->belongsToMany(ParameterType::class)
+        return $this->belongsToMany(ParameterType::class, DeviceParameter::TABLE_NAME)
             ->as('parameters')
             ->withPivot('id', 'expected_parameter')
             ->withTimestamps()
-            ->using(ParameterTypeUserDevice::class);
+            ->using(DeviceParameter::class);
     }
 }

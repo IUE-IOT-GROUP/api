@@ -31,4 +31,5 @@ Route::get('documentation', [\App\Http\Controllers\SwaggerController::class, 'in
 Route::get('documentation/api', [\App\Http\Controllers\SwaggerController::class, 'api'])->name('documentation.api');
 
 
-Route::get('test', \App\Http\Controllers\TestController::class);
+Route::get('test', [\App\Http\Controllers\TestController::class, 'add_device_data']);
+Route::get('test/deviceData/{device}', [\App\Http\Controllers\TestController::class, 'getDeviceData']);

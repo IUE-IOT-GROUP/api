@@ -16,7 +16,7 @@ class CreateDeviceDataTable extends Migration
         Schema::create('device_data', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_device_id')->constrained('user_devices');
-            $table->foreignId('parameter_type_user_device_id')->constrained('parameter_type_user_device');
+            $table->foreignId('device_parameter_id')->constrained('device_parameter');
             $table->string('value');
             $table->timestamps();
         });

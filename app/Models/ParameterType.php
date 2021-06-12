@@ -13,10 +13,10 @@ class ParameterType extends Model
 
     public function device()
     {
-        return $this->belongsToMany(UserDevice::class)
+        return $this->belongsToMany(UserDevice::class, DeviceParameter::TABLE_NAME)
             ->as('devices')
             ->withPivot('id', 'expected_parameter')
             ->withTimestamps()
-            ->using(ParameterTypeUserDevice::class);
+            ->using(DeviceParameter::class);
     }
 }
