@@ -108,23 +108,31 @@ class DataController extends Controller
                 {
                     case 'daily':
                         $period = Carbon::now()->subDays();
+                        $query = $query->where('created_at', '>=', $period)
+                            ->groupByRaw('HOUR(created_at)');
                         break;
                     case 'weekly':
-                        $period = Carbon::now()->subDays(7);
+                        $period = Carbon::now()->subDays(6);
+                        $query = $query->where('created_at', '>', $period)
+                            ->groupByRaw('DAY(created_at)');
                         break;
                     case 'monthly':
                         $period = Carbon::now()->subDays(30);
+                        $query = $query->where('created_at', '>=', $period)
+                            ->groupByRaw('WEEK(created_at)');
                         break;
                     default:
                         $period = Carbon::now()->subDays();
+                        $query = $query->where('created_at', '>=', $period)
+                            ->groupByRaw('HOUR(created_at)');
                 }
 
-                return $query->where('created_at', '>=', $period);
+                return $query;
             })
-            ->orderByDesc('created_at')
-            ->get();
+            ->select([\DB::raw('AVG(value) AS value'), 'user_device_id', 'device_parameter_id', 'created_at'])
+            ->orderByDesc('created_at');
 
-        $collectedData = DeviceDataResource::collection($query);
+        $collectedData = DeviceDataResource::collection($query->get());
 
         $data['data'] = [
             'details' => [
@@ -133,12 +141,13 @@ class DataController extends Controller
                 'unit' => $type->parameter->unit,
                 'expected_parameter' => $type->expected_parameter,
             ],
-            'min_y' => $query->min('value'),
-            'max_y' => $query->max('value'),
-            'min_x' => $query->min('created_at'),
-            'max_x' => $query->max('created_at'),
-            'count' => $query->count(),
-            'data' => $collectedData,
+            'min_y' => $collectedData->min('value'),
+            'max_y' => $collectedData->max('value'),
+            'min_x' => $collectedData->min('created_at'),
+            'max_x' => $collectedData->max('created_at'),
+            'count' => $collectedData->count(),
+            'data' => $collectedData->take(10),
+            'graphData' => $collectedData,
         ];
 
         return response()->json($data);

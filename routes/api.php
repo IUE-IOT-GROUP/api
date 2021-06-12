@@ -15,8 +15,8 @@ Route::post('login', [AuthController::class, 'login'])->name('api.login');
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('me', [ProfileController::class, 'index']);
     Route::post('devices/data', [DataController::class, 'store']);
-    Route::get('devices/data/{device}', [DataController::class, 'show']);
-    Route::get('devices/data/{device}/{type}', [DataController::class, 'showParameter']);
+    Route::get('devices/data/{device}', [DataController::class, 'show'])->missing(fn () => error('Device not found'));
+    Route::get('devices/data/{device}/{type}', [DataController::class, 'showParameter'])->missing(fn () => error('Parameter not found'));
 
     Route::apiResource('userDevices', UserDeviceController::class)->missing(fn () => error('User device not found'));
     Route::apiResource('devices', DeviceController::class)
