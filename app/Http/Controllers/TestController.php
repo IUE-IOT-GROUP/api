@@ -15,7 +15,7 @@ class TestController extends Controller
 {
     public function add_device_data()
     {
-        $since = Carbon::now()->subDays(90)->startOfDay();
+        $since = Carbon::create(2021, 6, 12, 14, 00, 00);
         $until = Carbon::now();
 
         $interval = collect(CarbonPeriod::since($since)->minutes(5)->until($until));

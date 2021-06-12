@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DeviceDataResource;
 use App\Models\DeviceData;
-use App\Models\ParameterType;
 use App\Models\DeviceParameter;
+use App\Models\ParameterType;
 use App\Models\UserDevice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -67,24 +67,30 @@ class DataController extends Controller
             $query = DeviceData::query()
                 ->where('device_parameter_id', $type->parameters->id)
                 ->where('created_at', '>=', Carbon::now()->subDays())
-                ->orderByDesc('created_at')
-                ->get();
+                ->orderByDesc('created_at');
 
-            $collectedData = DeviceDataResource::collection($query);
+            $collectedData = DeviceDataResource::collection($query->get());
+
+            $graphData = DeviceDataResource::collection(
+                $query->groupByRaw('HOUR(created_at)')
+                    ->select([\DB::raw('AVG(value) AS value'), 'user_device_id', 'device_parameter_id', 'created_at'])
+                    ->get()
+            );
 
             $data['data'][] = [
                 'details' => [
                     'device_parameter_id' => $type->parameters->id,
                     'name' => $type->name,
                     'unit' => $type->unit,
-                    'expected_parameter' => $type->parameters->expected_parameter
+                    'expected_parameter' => $type->parameters->expected_parameter,
                 ],
-                'min_y' => $query->min('value'),
-                'max_y' => $query->max('value'),
-                'min_x' => $query->min('created_at'),
-                'max_x' => $query->max('created_at'),
-                'count' => $query->count(),
-                'data' => $collectedData,
+                'min_y' => $graphData->min('value'),
+                'max_y' => $graphData->max('value'),
+                'min_x' => $graphData->min('created_at'),
+                'max_x' => $graphData->max('created_at'),
+                'count' => $collectedData->count(),
+                'data' => $collectedData->take(10),
+                'graphData' => $graphData,
             ];
         });
 
@@ -94,47 +100,46 @@ class DataController extends Controller
     public function showParameter(Request $request, UserDevice $device, DeviceParameter $type)
     {
         $data = [];
-//        $device->parameters->each(function (ParameterType $type) use (&$data) {
-            $query = DeviceData::query()
-                ->where('device_parameter_id', $type->id)
-                ->where('user_device_id', $device->id)
-                ->when($request->get('period'), function($query, $value) {
-                    switch($value) {
-                        case 'daily':
-                            $period = Carbon::now()->subDays();
-                            break;
-                        case 'weekly':
-                            $period = Carbon::now()->subDays(7);
-                            break;
-                        case 'monthly':
-                            $period = Carbon::now()->subDays(30);
-                            break;
-                        default:
-                            $period = Carbon::now()->subDays();
-                    }
+        $query = DeviceData::query()
+            ->where('device_parameter_id', $type->id)
+            ->where('user_device_id', $device->id)
+            ->when($request->get('period'), function ($query, $value) {
+                switch ($value)
+                {
+                    case 'daily':
+                        $period = Carbon::now()->subDays();
+                        break;
+                    case 'weekly':
+                        $period = Carbon::now()->subDays(7);
+                        break;
+                    case 'monthly':
+                        $period = Carbon::now()->subDays(30);
+                        break;
+                    default:
+                        $period = Carbon::now()->subDays();
+                }
 
-                    return $query->where('created_at', '>=', $period);
-                })
-                ->orderByDesc('created_at')
-                ->get();
+                return $query->where('created_at', '>=', $period);
+            })
+            ->orderByDesc('created_at')
+            ->get();
 
-            $collectedData = DeviceDataResource::collection($query);
+        $collectedData = DeviceDataResource::collection($query);
 
-            $data['data'] = [
-                'details' => [
-                    'device_parameter_id' => $type->id,
-                    'name' => $type->parameter->name,
-                    'unit' => $type->parameter->unit,
-                    'expected_parameter' => $type->expected_parameter
-                ],
-                'min_y' => $query->min('value'),
-                'max_y' => $query->max('value'),
-                'min_x' => $query->min('created_at'),
-                'max_x' => $query->max('created_at'),
-                'count' => $query->count(),
-                'data' => $collectedData,
-            ];
-//        });
+        $data['data'] = [
+            'details' => [
+                'device_parameter_id' => $type->id,
+                'name' => $type->parameter->name,
+                'unit' => $type->parameter->unit,
+                'expected_parameter' => $type->expected_parameter,
+            ],
+            'min_y' => $query->min('value'),
+            'max_y' => $query->max('value'),
+            'min_x' => $query->min('created_at'),
+            'max_x' => $query->max('created_at'),
+            'count' => $query->count(),
+            'data' => $collectedData,
+        ];
 
         return response()->json($data);
     }
