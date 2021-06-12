@@ -64,9 +64,10 @@ class DataController extends Controller
     {
         $data = [];
         $device->parameters->each(function (ParameterType $type) use (&$data) {
-            $query = DeviceData::where('device_parameter_id', $type->parameters->id)
+            $query = DeviceData::query()
+                ->where('device_parameter_id', $type->parameters->id)
+                ->where('created_at', '>=', Carbon::now()->subDays())
                 ->orderByDesc('created_at')
-                ->take(24)
                 ->get();
 
             $collectedData = DeviceDataResource::collection($query);
