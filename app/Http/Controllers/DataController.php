@@ -79,8 +79,11 @@ class DataController extends Controller
                     'unit' => $type->unit,
                     'expected_parameter' => $type->parameters->expected_parameter
                 ],
-                'min' => $query->min('value'),
-                'max' => $query->max('value'),
+                'min_y' => $query->min('value'),
+                'max_y' => $query->max('value'),
+                'min_x' => $query->min('created_at'),
+                'max_x' => $query->max('created_at'),
+                'count' => $query->count(),
                 'data' => $collectedData,
             ];
         });
