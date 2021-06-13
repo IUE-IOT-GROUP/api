@@ -16,7 +16,7 @@ class DeviceDataResource extends JsonResource
         return [
             'id' => $this->id,
             'value' => $this->value,
-            'created_at' => $this->created_at,
+            'created_at' => $this->created_at->format('Y-m-d H:i:s'),
         ];
     }
 }

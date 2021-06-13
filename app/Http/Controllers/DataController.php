@@ -60,7 +60,7 @@ class DataController extends Controller
         return $this->error('An error has occurred.', 400);
     }
 
-    public function show(UserDevice $device)
+    public function show(UserDevice $device): \Illuminate\Http\JsonResponse
     {
         $data = [];
         $device->parameters->each(function (ParameterType $type) use (&$data) {
@@ -71,11 +71,11 @@ class DataController extends Controller
 
             $collectedData = DeviceDataResource::collection($query->get());
 
-            $graphData = DeviceDataResource::collection(
-                $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')')
-                    ->select([\DB::raw('AVG(value) AS value'), 'user_device_id', 'device_parameter_id', \DB::raw('MAX(created_at) as created_at')])
-                    ->get()
-            );
+            $graphQuery = $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')')
+                ->select([\DB::raw('AVG(value) AS value'), 'user_device_id', 'device_parameter_id', \DB::raw('MIN(created_at) as created_at')])
+                ->get();
+
+            $graphData = DeviceDataResource::collection($graphQuery);
 
             $data['data'][] = [
                 'details' => [
@@ -86,8 +86,8 @@ class DataController extends Controller
                 ],
                 'min_y' => $graphData->min('value'),
                 'max_y' => $graphData->max('value'),
-                'min_x' => $graphData->min('created_at'),
-                'max_x' => $graphData->max('created_at'),
+                'min_x' => $graphQuery->min('created_at')->format('Y-m-d H:i:s'),
+                'max_x' => $collectedData->max('created_at')->format('Y-m-d H:i:s'),
                 'count' => $collectedData->count(),
                 'data' => $collectedData->take(10),
                 'graphData' => $graphData,
@@ -97,49 +97,39 @@ class DataController extends Controller
         return response()->json($data);
     }
 
-    public function showParameter(Request $request, UserDevice $device, DeviceParameter $type)
+    public function showParameter(Request $request, UserDevice $device, DeviceParameter $type): \Illuminate\Http\JsonResponse
     {
         $data = [];
         $query = DeviceData::query()
             ->where('device_parameter_id', $type->id)
             ->where('user_device_id', $device->id)
             ->when($request->get('period'), function ($query, $value) {
-                switch ($value)
+                return match ($value)
                 {
-                    case 'daily':
-                        $period = Carbon::now()->subDays();
-                        $query = $query->where('created_at', '>=', $period);
-                        break;
-                    case 'weekly':
-                        $period = Carbon::now()->subDays(6);
-                        $query = $query->where('created_at', '>', $period);
-                        break;
-                    case 'monthly':
-                        $period = Carbon::now()->subDays(30);
-                        $query = $query->where('created_at', '>=', $period);
-                        break;
-                    default:
-                        $period = Carbon::now()->subDays();
-                        $query = $query->where('created_at', '>=', $period);
-                }
-
-                return $query;
+                    'weekly' => $query->where('created_at', '>', Carbon::now()->subDays(6)),
+                    'monthly' => $query->where('created_at', '>=', Carbon::now()->subMonths()),
+                    default => $query->where('created_at', '>=', Carbon::now()->subDays()),
+                };
             })
             ->orderByDesc('created_at');
 
         $collectedData = DeviceDataResource::collection($query->get());
 
-        $graphData = DeviceDataResource::collection(
-            $query->when($request->get('period'), function ($query, $value) {
-                return match ($value)
-                {
-                    'weekly' => $query->groupByRaw('date_format(created_at, \'%Y%m%d\')'),
-                    'monthly' => $query->groupByRaw('date_format(created_at, \'%u\')'),
-                    default => $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')'),
-                };
-            })->select([\DB::raw('AVG(value) AS value'), 'user_device_id', 'device_parameter_id', \DB::raw('MAX(created_at) as created_at')])
-                ->get()
-        );
+        $graphQuery = $query->when($request->get('period'), function ($query, $value) {
+            return match ($value)
+            {
+                'weekly' => $query->groupByRaw('date_format(created_at, \'%Y%m%d\')'),
+                'monthly' => $query->groupByRaw('date_format(created_at, \'%u\')'),
+                default => $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')'),
+            };
+        })
+            ->select([\DB::raw('MAX(id) AS id, AVG(value) AS value'), 'user_device_id', 'device_parameter_id', \DB::raw('MIN(created_at) as created_at')])
+            ->tap(function ($query) {
+//                ray(\Str::replaceArray('?', $query->getBindings(), $query->toSql()));
+            })
+            ->get();
+
+        $graphData = DeviceDataResource::collection($graphQuery);
 
         $data['data'] = [
             'details' => [
@@ -150,8 +140,8 @@ class DataController extends Controller
             ],
             'min_y' => $graphData->min('value'),
             'max_y' => $graphData->max('value'),
-            'min_x' => $graphData->min('created_at'),
-            'max_x' => $graphData->max('created_at'),
+            'min_x' => $graphQuery->min('created_at')->format('Y-m-d H:i:s'),
+            'max_x' => $collectedData->max('created_at')->format('Y-m-d H:i:s'),
             'count' => $graphData->count(),
             'data' => $collectedData->take(10),
             'graphData' => $graphData,
