@@ -72,8 +72,8 @@ class DataController extends Controller
             $collectedData = DeviceDataResource::collection($query->get());
 
             $graphData = DeviceDataResource::collection(
-                $query->groupByRaw('HOUR(created_at)')
-                    ->select([\DB::raw('AVG(value) AS value'), 'user_device_id', 'device_parameter_id', 'created_at'])
+                $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')')
+                    ->select([\DB::raw('AVG(value) AS value'), 'user_device_id', 'device_parameter_id', \DB::raw('MAX(created_at)')])
                     ->get()
             );
 
@@ -134,20 +134,20 @@ class DataController extends Controller
                 switch ($value)
                 {
                     case 'daily':
-                        $query = $query->groupByRaw('HOUR(created_at)');
+                        $query = $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')');
                         break;
                     case 'weekly':
-                        $query = $query->groupByRaw('DAY(created_at)');
+                        $query = $query->groupByRaw('date_format(created_at, \'%Y%m%d\')');
                         break;
                     case 'monthly':
-                        $query = $query->groupByRaw('WEEK(created_at)');
+                        $query = $query->groupByRaw('date_format(created_at, \'%u\')');
                         break;
                     default:
-                        $query = $query->groupByRaw('HOUR(created_at)');
+                        $query = $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')');
                 }
 
                 return $query;
-            })->select([\DB::raw('AVG(value) AS value'), 'user_device_id', 'device_parameter_id', 'created_at'])
+            })->select([\DB::raw('AVG(value) AS value'), 'user_device_id', 'device_parameter_id', \DB::raw('MAX(created_at)')])
                 ->get()
         );
 
