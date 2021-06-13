@@ -40,10 +40,16 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $request->validate([
+        $fields = $request->validate([
+            'name' => 'required',
             'email' => 'required|email',
-            'password' => 'present|min:4'
+            'password' => 'sometimes|min:4',
+            'phone_number' => 'nullable'
         ]);
+
+        $user->update($fields);
+
+        return $this->success();
     }
 
     public function destroy(User $user)
