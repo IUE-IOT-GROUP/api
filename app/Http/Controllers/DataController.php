@@ -106,7 +106,7 @@ class DataController extends Controller
             ->when($request->get('period'), function ($query, $value) {
                 return match ($value)
                 {
-                    'weekly' => $query->where('created_at', '>', Carbon::now()->subDays(6)),
+                    'weekly' => $query->where('created_at', '>', Carbon::now()->subDays(7)),
                     'monthly' => $query->where('created_at', '>=', Carbon::now()->subMonths()),
                     default => $query->where('created_at', '>=', Carbon::now()->subDays()),
                 };
