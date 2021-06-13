@@ -73,7 +73,7 @@ class DataController extends Controller
 
             $graphData = DeviceDataResource::collection(
                 $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')')
-                    ->select([\DB::raw('AVG(value) AS value'), 'user_device_id', 'device_parameter_id', \DB::raw('MAX(created_at)')])
+                    ->select([\DB::raw('AVG(value) AS value'), 'user_device_id', 'device_parameter_id', \DB::raw('MAX(created_at) as created_at')])
                     ->get()
             );
 
@@ -131,23 +131,13 @@ class DataController extends Controller
 
         $graphData = DeviceDataResource::collection(
             $query->when($request->get('period'), function ($query, $value) {
-                switch ($value)
+                return match ($value)
                 {
-                    case 'daily':
-                        $query = $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')');
-                        break;
-                    case 'weekly':
-                        $query = $query->groupByRaw('date_format(created_at, \'%Y%m%d\')');
-                        break;
-                    case 'monthly':
-                        $query = $query->groupByRaw('date_format(created_at, \'%u\')');
-                        break;
-                    default:
-                        $query = $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')');
-                }
-
-                return $query;
-            })->select([\DB::raw('AVG(value) AS value'), 'user_device_id', 'device_parameter_id', \DB::raw('MAX(created_at)')])
+                    'weekly' => $query->groupByRaw('date_format(created_at, \'%Y%m%d\')'),
+                    'monthly' => $query->groupByRaw('date_format(created_at, \'%u\')'),
+                    default => $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')'),
+                };
+            })->select([\DB::raw('AVG(value) AS value'), 'user_device_id', 'device_parameter_id', \DB::raw('MAX(created_at) as created_at')])
                 ->get()
         );
 
