@@ -15,26 +15,23 @@ class DeviceDataSeeder extends Seeder
     {
         $faker = Factory::create();
 
+        $since = Carbon::parse('2021-06-13 02:53:11');
+        $until = Carbon::now();
+
+        $interval = collect(CarbonPeriod::since($since)->minutes(5)->until($until));
+        $faker = Factory::create();
+
         $user = User::find(1);
         foreach ($user->devices as $device) {
-            foreach ($device->parameters as $parameter)
-            {
-                $since = Carbon::now()->startOfDay();
-                $until = Carbon::create(null, null, null, hour: 21);
-
-                $interval = collect(CarbonPeriod::since($since)->minutes(60)->until($until));
-
-//                foreach ($period as )
-
-                /*foreach (range(0, 50) as $i)
-                {
+            foreach ($device->parameters as $parameter) {
+                foreach ($interval as $time) {
                     DeviceData::create([
-                        'parameter_type_user_device_id' => $parameter->parameters->id,
+                        'device_parameter_id' => $parameter->parameters->id,
                         'user_device_id' => $device->id,
-                        'value' => $faker->randomNumber(2),
-                        'created_at' => $faker->dateTimeBetween('-1 day')
+                        'value' => $faker->numberBetween(25, 40),
+                        'created_at' => $time,
                     ]);
-                }*/
+                }
             }
         }
     }
