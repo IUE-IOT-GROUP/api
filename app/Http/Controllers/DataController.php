@@ -8,6 +8,7 @@ use App\Models\DeviceParameter;
 use App\Models\ParameterType;
 use App\Models\UserDevice;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 class DataController extends Controller
@@ -134,10 +135,10 @@ class DataController extends Controller
             $query = DeviceData::query()
                 ->where('device_parameter_id', $type->id)
                 ->where('user_device_id', $device->id)
-                ->when($period, function ($query, $value) use ($yesterday) {
+                ->when($period, function (Builder $query, $value) use ($yesterday) {
                     return match ($value) {
                         'weekly' => $query->where('created_at', '>', $yesterday->subDays(7)),
-                        'monthly' => $query->where('created_at', '>=', $yesterday->subMonths()),
+                        'monthly' => $query->where('created_at', '>=', $yesterday->subMonths())->take(5),
                         default => $query->where('created_at', '>=', $yesterday->subDays()),
                     };
                 })
@@ -145,10 +146,10 @@ class DataController extends Controller
 
             $collectedData = DeviceDataResource::collection($query->get());
 
-            $graphQuery = $query->when($period, function ($query, $value) {
+            $graphQuery = $query->when($period, function (Builder $query, $value) {
                 return match ($value) {
                     'weekly' => $query->groupByRaw('date_format(created_at, \'%Y%m%d\')'),
-                    'monthly' => $query->groupByRaw('date_format(created_at, \'%u\')'),
+                    'monthly' => $query->groupByRaw('date_format(created_at, \'%u\')')->take(5),
                     default => $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')'),
                 };
             })
