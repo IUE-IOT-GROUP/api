@@ -4,15 +4,15 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "place_id": "2",
+    "place_id": "b6b6cd74-3fc1-42b1-8da4-adbb46c6f637",
     "mac_address": "3C-F0-11-3F-B3-D6",
     "ip_address": "192.168.0.25",
     "name": "Arduino-DHT11",
-    "device_id": "1",
+    "device_id": "ac67b46f-8f43-4f81-8f76-60bf7152aa7a",
     "parameters": {
         "temperature": {
             "name": "Temperature",
-            "unit": "centigratee"
+            "unit": "centigrade"
         },
         "humidity": {
             "name": "Humidity",

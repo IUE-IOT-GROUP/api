@@ -14,10 +14,10 @@ class CreatePlacesTable extends Migration
     public function up()
     {
         Schema::create('places', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
-            $table->foreignId('user_id')->nullable()->constrained('users');
-            $table->foreignId('parent_id')->nullable()->constrained('places');
+            $table->foreignUuid('user_id')->nullable()->constrained('users');
+            $table->uuid('parent_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

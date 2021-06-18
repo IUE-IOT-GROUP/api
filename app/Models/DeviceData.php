@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuidAsPrimaryKey;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 class DeviceData extends Model
 {
     use HasFactory;
+    use HasUuidAsPrimaryKey;
+
+    protected $keyType = 'string';
+    public $incrementing = false;
 
     protected $guarded = ['id'];
     protected $with = ['parameter', 'device'];

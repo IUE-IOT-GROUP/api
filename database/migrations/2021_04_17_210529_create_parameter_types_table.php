@@ -9,7 +9,7 @@ class CreateParameterTypesTable extends Migration
     public function up()
     {
         Schema::create('parameter_types', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->string('unit');
             $table->timestamps();

@@ -2,15 +2,19 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuidAsPrimaryKey;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class DeviceParameter extends Pivot
 {
+    use HasUuidAsPrimaryKey;
+
     const TABLE_NAME = 'device_parameter';
-    public $incrementing = true;
-    protected $with = ['device'];
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     protected $guarded = ['id'];
+    protected $with = ['device'];
 
     public function device()
     {

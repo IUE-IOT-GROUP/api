@@ -15,25 +15,25 @@ class PlaceSeeder extends Seeder
      */
     public function run()
     {
-        $parent = Place::create([
+        $user = User::whereEmail('y@gizcan.xyz')->first();
+        $parent = $user->places()->create([
             'name' => 'Home',
-            'user_id' => 1,
             'parent_id' => null
         ]);
 
         $kitchen = $parent->children()->create([
             'name' => 'Kitchen',
-            'user_id' => 1,
+            'user_id' => $user->id,
         ]);
 
         $living = $parent->children()->create([
             'name' => 'Living Room',
-            'user_id' => 1
+            'user_id' => $user->id,
         ]);
 
         $room = $parent->children()->create([
             'name' => 'Bedroom',
-            'user_id' => 1,
+            'user_id' => $user->id,
         ]);
     }
 }
