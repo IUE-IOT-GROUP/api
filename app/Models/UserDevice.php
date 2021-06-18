@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuidAsPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class UserDevice extends Model
 {
     use HasFactory;
+    use HasUuidAsPrimaryKey;
+
+    protected $keyType = 'string';
+    public $incrementing = false;
 
     protected $guarded = ['id'];
 

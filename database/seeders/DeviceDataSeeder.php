@@ -15,13 +15,13 @@ class DeviceDataSeeder extends Seeder
     {
         $faker = Factory::create();
 
-        $since = Carbon::parse('2021-06-13 02:53:11');
+        $since = Carbon::now()->subMonths();
         $until = Carbon::now();
 
         $interval = collect(CarbonPeriod::since($since)->minutes(5)->until($until));
         $faker = Factory::create();
 
-        $user = User::find(1);
+        $user = User::whereEmail('y@gizcan.xyz')->first();
         foreach ($user->devices as $device) {
             foreach ($device->parameters as $parameter) {
                 foreach ($interval as $time) {

@@ -14,11 +14,11 @@ class CreateUserDevicesTable extends Migration
     public function up()
     {
         Schema::create('user_devices', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('name');
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('device_id')->constrained('devices')->onDelete('cascade');
-            $table->foreignId('place_id')->constrained('places')->onDelete('cascade');
+            $table->foreignUuid('user_id')->constrained('users');
+            $table->foreignUuid('device_id')->constrained('devices')->onDelete('cascade');
+            $table->foreignUuid('place_id')->constrained('places')->onDelete('cascade');
             $table->macAddress('mac_address');
             $table->ipAddress('ip_address');
             $table->timestamps();
