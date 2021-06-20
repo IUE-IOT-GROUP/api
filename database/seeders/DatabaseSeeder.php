@@ -41,8 +41,8 @@ class DatabaseSeeder extends Seeder
         if (isFog())
         {
             $call = [
-                PlaceSeeder::class,
-                DeviceSeeder::class,
+//                PlaceSeeder::class,
+//                DeviceSeeder::class,
             ];
         }
 

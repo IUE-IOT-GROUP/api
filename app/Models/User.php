@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Events\UserSavedEvent;
 use App\Traits\HasUuidAsPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -19,10 +18,7 @@ class User extends Authenticatable
     protected static $unguarded = true;
     public $incrementing = false;
     protected $keyType = 'string';
-    protected $dispatchesEvents = [
-        'saved' => UserSavedEvent::class,
-//        'updated' => UserUpdatedEvent::class
-    ];
+
     protected $hidden = [
         'password',
         'remember_token',

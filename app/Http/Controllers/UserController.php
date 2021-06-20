@@ -37,7 +37,10 @@ class UserController extends Controller
     {
         $data = $request->only(User::FIELDS);
 
-        User::create($data);
+
+        User::withoutEvents(function() use ($data) {
+            User::create($data);
+        });
     }
 
     public function show(User $user)

@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\Ims\SetupCommand;
 use App\Console\Commands\Ims\SynchronizeCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -11,6 +12,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         //
         SynchronizeCommand::class,
+        SetupCommand::class,
     ];
 
 
