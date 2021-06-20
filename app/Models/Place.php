@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\PlaceSavedEvent;
 use App\Traits\HasUuidAsPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,8 +14,13 @@ class Place extends Model
     use SoftDeletes;
     use HasUuidAsPrimaryKey;
 
+    public const FIELDS = ['id', 'name', 'parent_id', 'user_id', 'created_at', 'updated_at', 'deleted_at'];
     protected $keyType = 'string';
     public $incrementing = false;
+
+    protected $dispatchesEvents = [
+        'saved' => PlaceSavedEvent::class
+    ];
 
     protected static $unguarded = true;
 

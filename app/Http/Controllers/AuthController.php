@@ -61,7 +61,8 @@ class AuthController extends Controller
         $user = User::whereEmail($request['email'])->first();
         $localToken = $user->tokens()->create([
             'token' => hash('sha256', $token),
-            'name' => $request['device_name']
+            'name' => $request['device_name'],
+            'abilities' => ['*']
         ]);
 
         ray($token);

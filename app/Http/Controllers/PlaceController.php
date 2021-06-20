@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Place\StoreRequest;
 use App\Http\Resources\Place\PlaceResource;
 use App\Models\Place;
 use Illuminate\Http\Request;
@@ -31,7 +32,8 @@ class PlaceController extends Controller
     {
         $places = $request->user()->places()->whereParentId(null);
 
-        if ($request->filled('with')) {
+        if ($request->filled('with'))
+        {
             $with = explode(',', $request->with);
             ray($with);
             $places = $places->with($with);
@@ -40,27 +42,15 @@ class PlaceController extends Controller
         return PlaceResource::collection($places->get());
     }
 
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'parent' => ['nullable', 'exists:places,id'],
+        $place = new Place([
+            'name' => $request->name(),
         ]);
+        $place->parent()->associate($request->parent());
+        $place->user()->associate($request->user());
 
-        if ($request->parent)
-        {
-            $parentPlace = Place::findOrFail($request->parent);
-            $place = $parentPlace->children()->create([
-                'name' => $request->name,
-                'user_id' => $request->user()->id,
-            ]);
-        }
-        else
-        {
-            $place = $request->user()->places()->create([
-                'name' => $request->name,
-            ]);
-        }
+        $place->save();
 
         return new PlaceResource($place);
     }

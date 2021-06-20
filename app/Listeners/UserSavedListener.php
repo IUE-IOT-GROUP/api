@@ -19,7 +19,8 @@ class UserSavedListener
 
         $fields = [];
 
-        foreach (User::FIELDS as $field) {
+        foreach (User::FIELDS as $field)
+        {
             $fields[$field] = $user->{$field};
         }
 

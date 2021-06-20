@@ -2,14 +2,14 @@
 
 namespace App\Events;
 
-use App\Models\User;
+use App\Models\Place;
 use Illuminate\Foundation\Events\Dispatchable;
 
-class UserSavedEvent
+class PlaceSavedEvent
 {
     use Dispatchable;
 
-    public function __construct(public User $user)
+    public function __construct(public Place $place)
     {
     }
 }

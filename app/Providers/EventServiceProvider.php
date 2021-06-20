@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\PlaceSavedEvent;
 use App\Events\UserSavedEvent;
+use App\Listeners\PlaceSavedListener;
 use App\Listeners\UserSavedListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         UserSavedEvent::class => [
             UserSavedListener::class,
+        ],
+        PlaceSavedEvent::class => [
+            PlaceSavedListener::class,
         ],
     ];
 
