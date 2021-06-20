@@ -45,6 +45,7 @@ class PlaceController extends Controller
     public function store(StoreRequest $request)
     {
         $place = new Place([
+            'id' => $request->id(),
             'name' => $request->name(),
         ]);
         $place->parent()->associate($request->parent());

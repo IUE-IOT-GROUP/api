@@ -11,7 +11,7 @@ class Fog extends Model
 
     protected $keyType = 'string';
     public $incrementing = false;
-    protected static $unguarded = true;
+    protected $guarded = false;
 
     public function user()
     {

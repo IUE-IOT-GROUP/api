@@ -15,7 +15,7 @@ class DeviceData extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected static $unguarded = true;
+    protected $guarded = false;
     protected $with = ['parameter', 'device'];
 
     public function device()

@@ -14,7 +14,7 @@ class Place extends Model
     use HasUuidAsPrimaryKey;
 
     public const FIELDS = ['id', 'name', 'parent_id', 'user_id', 'created_at', 'updated_at', 'deleted_at'];
-    protected static $unguarded = true;
+    protected $guarded = false;
     public $incrementing = false;
     protected $keyType = 'string';
 

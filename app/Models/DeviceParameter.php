@@ -13,7 +13,7 @@ class DeviceParameter extends Pivot
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected static $unguarded = true;
+    protected $guarded = false;
     protected $with = ['device'];
 
     public function device()

@@ -15,7 +15,7 @@ class User extends Authenticatable
     use HasUuidAsPrimaryKey;
 
     public const FIELDS = ['id', 'name', 'email', 'email_verified_at', 'password', 'two_factor_secret', 'phone_number', 'is_admin', 'remember_token', 'created_at', 'updated_at'];
-    protected static $unguarded = true;
+    protected $guarded = false;
     public $incrementing = false;
     protected $keyType = 'string';
 
