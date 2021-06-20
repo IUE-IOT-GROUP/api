@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignUuid('place_id')->constrained('places');
             $table->macAddress('mac_address');
             $table->ipAddress('ip_address');
-            $table->integer('port')->default(80);
+            $table->integer('port')->nullable()->default(80);
 
             $table->timestamps();
             $table->softDeletes();

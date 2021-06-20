@@ -1,8 +1,8 @@
-PUT {{url}}/places/6
+PUT {{url}}/places/184967c2-a058-4e32-8d37-01d5f009d678
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Erel's Place"
+  "name": "Yağız Home"
 }

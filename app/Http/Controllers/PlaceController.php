@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cloud\Cloud;
 use App\Http\Requests\Place\StoreRequest;
+use App\Http\Requests\Place\UpdateRequest;
 use App\Http\Resources\Place\PlaceResource;
 use App\Models\Place;
 use Illuminate\Http\Request;
@@ -55,14 +56,8 @@ class PlaceController extends Controller
 
         if (isFog())
         {
-            $fields = [];
-
-            foreach (Place::FIELDS as $field)
-            {
-                $fields[$field] = $place->{$field};
-            }
-
-            Cloud::post('places', $fields);
+            ray($place->attributesToArray());
+            Cloud::post('places', $place->attributesToArray());
         }
 
         return new PlaceResource($place);
@@ -75,26 +70,15 @@ class PlaceController extends Controller
         return new PlaceResource($place);
     }
 
-    public function update(Request $request, Place $place)
+    public function update(UpdateRequest $request, Place $place)
     {
-        $request->validate([
-            'name' => 'required',
-            'parent' => ['nullable', 'exists:places,id'],
+        $place->update([
+            'name' => $request->name(),
         ]);
 
-        if ($request->parent)
+        if (isFog())
         {
-            $parentPlace = Place::findOrFail($request->parent);
-            $place = $place->update([
-                'name' => $request->name,
-                'parent_id' => $parentPlace->id,
-            ]);
-        }
-        else
-        {
-            $place->update([
-                'name' => $request->name,
-            ]);
+            Cloud::put('places/' . $place->id, $place->attributesToArray());
         }
 
         return new PlaceResource($place);
@@ -106,6 +90,10 @@ class PlaceController extends Controller
         $place->devices()->delete();
         $place->delete();
 
+        if (isFog())
+        {
+            Cloud::delete('places/' . $place->id);
+        }
 
         return $this->success();
     }

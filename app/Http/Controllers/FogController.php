@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Cloud\Cloud;
+use App\Http\Requests\Fog\StoreRequest;
+use App\Http\Requests\Fog\UpdateRequest;
 use App\Http\Resources\FogResource;
 use App\Models\Fog;
-use App\Models\Place;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class FogController extends Controller
 {
@@ -15,72 +16,66 @@ class FogController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store(StoreRequest $request): FogResource
     {
-        $request->validate([
-            'name' => ['required'],
-            'place_id' => ['bail', 'required', Rule::exists('places', 'id'), function ($attribute, $value, $fail) use ($request) {
-                $exists = Place::where('id', $request->place_id)->where('user_id', $request->user()->id)->exists();
-                if (!$exists)
-                {
-                    $fail('The given place cannot be found');
-                }
-            }],
-            'mac_address' => ['required'],
-            'ip_address' => ['required'],
-            'port' => ['nullable']
-        ], [
-            'fog_id.exists' => 'The given fog does not exist.',
+        ray($request)->blue();
+        $fog = new Fog([
+            'id' => $request->id(),
+            'name' => $request->name(),
+            'mac_address' => $request->macAddress(),
+            'ip_address' => $request->ipAddress(),
+            'port' => $request->port(),
         ]);
 
-        $fog = new Fog;
-        $fog->name = $request->get('name');
-        $fog->place_id = $request->get('place_id');
-        $fog->user_id = $request->user()->id;
-        $fog->mac_address = $request->get('mac_address');
-        $fog->ip_address = $request->get('ip_address');
-        $fog->port = $request->get('port', 80);
+        $fog->place()->associate($request->place());
+        $fog->user()->associate($request->user());
+
         $fog->save();
+
+        if (isFog())
+        {
+            Cloud::post('fogs', $fog->attributesToArray());
+        }
 
         return new FogResource($fog);
     }
 
 
-    public function show(Request $request, Fog $fog)
+    public function show(Request $request, Fog $fog): FogResource
     {
         return new FogResource($fog->load(['place', 'devices']));
     }
 
-    public function update(Request $request, Fog $fog)
+    public function update(UpdateRequest $request, Fog $fog): FogResource
     {
-        $request->validate([
-            'name' => ['required'],
-            'place_id' => ['bail', 'required', Rule::exists('places', 'id'), function ($attribute, $value, $fail) use ($request) {
-                $exists = Place::where('id', $request->place_id)->where('user_id', $request->user()->id)->exists();
-                if (!$exists)
-                {
-                    $fail('The given place cannot be found');
-                }
-            }],
-            'mac_address' => ['required'],
-            'ip_address' => ['required'],
-        ], [
-            'fog_id.exists' => 'The given fog does not exist.',
+        $fog->update([
+            'name' => $request->name(),
+            'mac_address' => $request->macAddress(),
+            'ip_address' => $request->ipAddress(),
+            'port' => $request->port(),
         ]);
 
-        $fog->name = $request->name;
-        $fog->place_id = $request->place_id;
-        $fog->mac_address = $request->mac_address;
-        $fog->ip_address = $request->ip_address;
+        $fog->place()->associate($request->place());
+
         $fog->save();
+
+        if (isFog())
+        {
+            Cloud::put('fogs/' . $fog->id, $fog->attributesToArray());
+        }
 
         return new FogResource($fog);
     }
 
-    public function destroy(Fog $fog)
+    public function destroy(Fog $fog): \Illuminate\Http\JsonResponse
     {
         $fog->devices()->delete();
         $fog->delete();
+
+        if (isFog())
+        {
+            Cloud::delete('fogs' . $fog->id);
+        }
 
         return $this->success();
     }

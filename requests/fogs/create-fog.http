@@ -4,7 +4,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-    "place_id": "c5937339-446d-4988-9d1d-d79d6cf3b1f3",
+    "place_id": "75a22394-9b3f-42a6-aa9e-b29c1f58ef83",
     "mac_address": "3C-F0-11-3F-B3-D6",
     "ip_address": "192.168.0.25",
     "name": "Main Fog"
