@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasUuidAsPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,8 +11,12 @@ class Place extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use HasUuidAsPrimaryKey;
 
-    protected $guarded = ['id'];
+    public const FIELDS = ['id', 'name', 'parent_id', 'user_id', 'created_at', 'updated_at', 'deleted_at'];
+    protected $guarded = false;
+    public $incrementing = false;
+    protected $keyType = 'string';
 
     public function user()
     {
@@ -28,8 +33,13 @@ class Place extends Model
         return $this->belongsTo(Place::class, 'parent_id');
     }
 
+    public function fogs()
+    {
+        return $this->hasMany(Fog::class);
+    }
+
     public function devices()
     {
-        return $this->hasMany(UserDevice::class);
+        return $this->hasMany(Device::class);
     }
 }

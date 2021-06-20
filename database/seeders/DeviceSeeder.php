@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Device;
-use App\Models\ParameterType;
+use App\Models\DeviceType;
+use App\Models\Parameter;
 use Illuminate\Database\Seeder;
 
 class DeviceSeeder extends Seeder
@@ -15,32 +15,32 @@ class DeviceSeeder extends Seeder
      */
     public function run()
     {
-        $p1 = ParameterType::create([
+        $p1 = Parameter::create([
             'name' => 'Temperature',
             'unit' => 'centigrade',
         ]);
 
-        $p2 = ParameterType::create([
+        $p2 = Parameter::create([
             'name' => 'Temperature',
             'unit' => 'kelvin',
         ]);
 
-        $p3 = ParameterType::create([
+        $p3 = Parameter::create([
             'name' => 'Humidity',
             'unit' => 'percent',
         ]);
 
-        $p4 = ParameterType::create([
+        $p4 = Parameter::create([
             'name' => 'Distance',
             'unit' => 'centimeter',
         ]);
 
-        $p5 = ParameterType::create([
+        $p5 = Parameter::create([
             'name' => 'Distance',
             'unit' => 'meter',
         ]);
 
-        $device = Device::create([
+        $device = DeviceType::create([
             'name' => 'DHT 11',
         ]);
 //        $device->parameters()->sync([
@@ -49,7 +49,7 @@ class DeviceSeeder extends Seeder
 //            $p3->id => ['expected_parameter' => 'humidity']
 //        ]);
 
-        $device = Device::create([
+        $device = DeviceType::create([
             'name' => 'HC-SR04',
         ]);
 //        $device->parameters()->sync([

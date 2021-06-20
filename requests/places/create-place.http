@@ -4,5 +4,7 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Home"
+    "id": "084b95d0-8cdb-4549-89fe-a4396b234e949",
+    "name": "Kitchen Sub Place",
+    "parent": "76f3a8f7-8077-4405-933b-c6d7df803eba"
 }

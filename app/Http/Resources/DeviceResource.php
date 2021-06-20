@@ -2,13 +2,13 @@
 
 namespace App\Http\Resources;
 
-use App\Http\Resources\Device\DeviceResource;
+use App\Http\Resources\Device\DeviceTypeResource;
 use App\Http\Resources\Place\PlaceResource;
 use App\Models\DeviceParameter;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\UserDevice */
-class UserDeviceResource extends JsonResource
+/** @mixin \App\Models\Device */
+class DeviceResource extends JsonResource
 {
     /**
      * @param \Illuminate\Http\Request $request
@@ -26,12 +26,12 @@ class UserDeviceResource extends JsonResource
             'parameters_count' => $this->parameters_count,
 
             'user_id' => $this->user_id,
-            'device_id' => $this->device_id,
-            'place_id' => $this->place_id,
+            'device_type_id' => $this->device_type_id,
+            'fog_id' => $this->fog_id,
 
 
             'parameters' => ParameterResource::collection($this->whenLoaded('parameters')),
-            'device' => new DeviceResource($this->whenLoaded('device')),
+            'device_type' => new DeviceTypeResource($this->whenLoaded('deviceType')),
             'place' => new PlaceResource($this->whenLoaded('place')),
         ];
     }

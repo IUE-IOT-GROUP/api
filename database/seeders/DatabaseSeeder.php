@@ -18,24 +18,34 @@ class DatabaseSeeder extends Seeder
          User::create([
              'name' => 'yağız',
              'email' => 'y@gizcan.xyz',
-             'password' => \Hash::make('1234')
+             'password' => \Hash::make('1234'),
+             'is_admin' => true,
          ]);
 
          User::create([
              'name' => 'erel',
              'email' => 'erel@ozturk.com',
-             'password' => \Hash::make('1234')
+             'password' => \Hash::make('1234'),
+             'is_admin' => true,
          ]);
 
         User::create([
             'name' => 'berkin',
             'email' => 'berkin.yildiran@yahoo.com',
-            'password' => \Hash::make('1234')
+            'password' => \Hash::make('1234'),
+            'is_admin' => true,
         ]);
 
-        $this->call([
-            PlaceSeeder::class,
-            DeviceSeeder::class,
-        ]);
+        $call = [];
+
+        if (isFog())
+        {
+            $call = [
+//                PlaceSeeder::class,
+//                DeviceSeeder::class,
+            ];
+        }
+
+        $this->call($call);
     }
 }

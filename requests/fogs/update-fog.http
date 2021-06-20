@@ -1,0 +1,11 @@
+PUT {{url}}/fogs/1375de90-a4a6-4971-b3fa-300231b5b069
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "place_id": "4ee0ac27-2b1c-430a-b96b-903d223ca49c",
+    "mac_address": "aa:aa:aa:aa:ab",
+    "ip_address": "192.168.0.25",
+    "name": "Main Fog"
+}

@@ -1,5 +1,4 @@
-POST {{url}}/devices/data
-Authorization: Bearer {{auth_token}}
+POST {{url}}/devices/data/8401f872-2349-4b69-8a9c-0e6e69981e5a
 Content-Type: application/json
 Accept: application/json
 

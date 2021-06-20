@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cloud\Cloud;
 use App\Http\Requests\Auth\StoreRequest;
 use App\Models\User;
 use Exception;
@@ -12,9 +13,8 @@ class AuthController extends Controller
     /**
      * @throws ValidationException
      */
-    public function login(StoreRequest $request): \Illuminate\Http\JsonResponse
+    public function login(StoreRequest $request)
     {
-
         try
         {
             $user = User::where('email', $request->email)->firstOrFail();

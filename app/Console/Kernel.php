@@ -2,36 +2,25 @@
 
 namespace App\Console;
 
+use App\Console\Commands\Ims\SetupCommand;
+use App\Console\Commands\Ims\SynchronizeCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * The Artisan commands provided by your application.
-     *
-     * @var array
-     */
     protected $commands = [
         //
+        SynchronizeCommand::class,
+        SetupCommand::class,
     ];
 
-    /**
-     * Define the application's command schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
-     * @return void
-     */
+
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('ims:sync')->everyFifteenMinutes()->sendOutputTo(storage_path('schedule.log'));
     }
 
-    /**
-     * Register the commands for the application.
-     *
-     * @return void
-     */
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');
