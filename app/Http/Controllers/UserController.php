@@ -33,6 +33,13 @@ class UserController extends Controller
         ]);
     }
 
+    public function storeFromFog(Request $request)
+    {
+        $data = $request->only(User::FIELDS);
+
+        User::create($data);
+    }
+
     public function show(User $user)
     {
         return new UserResource($user);

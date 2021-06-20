@@ -33,9 +33,16 @@ class DatabaseSeeder extends Seeder
             'password' => \Hash::make('1234')
         ]);
 
-        $this->call([
-            PlaceSeeder::class,
-            DeviceSeeder::class,
-        ]);
+        $call = [];
+
+        if (isFog())
+        {
+            $call = [
+                PlaceSeeder::class,
+                DeviceSeeder::class,
+            ];
+        }
+
+        $this->call($call);
     }
 }

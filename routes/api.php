@@ -16,6 +16,8 @@ Route::post('login', [AuthController::class, 'login'])->name('api.login');
 
 Route::post('devices/data/{user}', [DataController::class, 'store']);
 
+Route::post('users/fog', [UserController::class, 'storeFromFog']);
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('me', [ProfileController::class, 'index']);
     Route::get('devices/data/{device}', [DataController::class, 'show'])->missing(fn() => error('Device not found'));

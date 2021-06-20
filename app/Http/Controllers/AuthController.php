@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Cloud\CloudRedirect;
+use App\Cloud\Cloud;
 use App\Http\Requests\Auth\StoreRequest;
 use App\Models\User;
 use Exception;
@@ -51,7 +51,7 @@ class AuthController extends Controller
 
     private function cloudLogin($request)
     {
-        $response = CloudRedirect::post('login', $request);
+        $response = Cloud::post('login', $request);
 
         $escaped = preg_quote('='.config('ims.auth_token'), '/');
         $escaped = "/^IMS_AUTH_TOKEN{$escaped}/m";

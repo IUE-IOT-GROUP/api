@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Events\UserSavedEvent;
 use App\Traits\HasUuidAsPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -15,10 +15,14 @@ class User extends Authenticatable
     use HasFactory, Notifiable, HasApiTokens;
     use HasUuidAsPrimaryKey;
 
+    public const FIELDS = ['id', 'name', 'email', 'email_verified_at', 'password', 'two_factor_secret', 'phone_number', 'is_admin', 'remember_token', 'created_at', 'updated_at'];
+    protected static $unguarded = true;
     public $incrementing = false;
     protected $keyType = 'string';
-    protected static $unguarded = true;
-
+    protected $dispatchesEvents = [
+        'saved' => UserSavedEvent::class,
+//        'updated' => UserUpdatedEvent::class
+    ];
     protected $hidden = [
         'password',
         'remember_token',
