@@ -100,7 +100,7 @@ class StoreRequest extends FormRequest
     private function findDeviceType(?string $id): ?DeviceType
     {
         return $id
-            ? DeviceType::find($id)
+            ? DeviceType::firstOrCreate(['id' => $id], ['name' => $this->name()])
             : DeviceType::firstOrCreate(['name' => $this->name()]);
     }
 

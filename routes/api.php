@@ -37,4 +37,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('places.children', \App\Http\Controllers\PlacePlaceController::class);
     Route::apiResource('places.devices', PlaceDeviceController::class)->missing(fn() => error('Place not found'));
     Route::apiResource('places.fogs', PlaceFogController::class)->missing(fn() => error('Place not found'));
+
+    Route::post('cloud/data', \App\Http\Controllers\CloudController::class);
 });

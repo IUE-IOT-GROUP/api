@@ -136,6 +136,11 @@ class DeviceController extends Controller
         $device->parameters()->detach();
         $device->delete();
 
+        if (isFog())
+        {
+            Cloud::delete('devices/'.$device->id);
+        }
+
         return response()->json(['success' => true]);
     }
 }

@@ -18,7 +18,7 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command('ims:sync')->everyThirtyMinutes()->sendOutputTo(storage_path('schedule.log'));
     }
 
     protected function commands()
