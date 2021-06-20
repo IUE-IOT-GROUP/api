@@ -114,11 +114,8 @@ class DataController extends Controller
     public function showParameter(Request $request, Device $device, DeviceParameter $type): \Illuminate\Http\JsonResponse
     {
         $period = $request->input('period', 'daily');
-        ray()->clearScreen();
         $data = [];
         $latest = DeviceData::where('device_parameter_id', $type->id)->take(1)->latest()->first();
-
-        ray($type)->blue();
 
         $details['details'] = [
             'device_parameter_id' => $type->id,
@@ -158,11 +155,9 @@ class DataController extends Controller
             })
                 ->select([\DB::raw('MAX(id) AS id, AVG(value) AS value'), 'device_id', 'device_parameter_id', \DB::raw('MIN(created_at) as created_at')])
                 ->tap(function ($query) {
-                    ray(\Str::replaceArray('?', $query->getBindings(), $query->toSql()))->blue();
+//                    ray(\Str::replaceArray('?', $query->getBindings(), $query->toSql()))->blue();
                 })
                 ->get();
-
-            ray('graph', $graphQuery)->blue();
 
             $graphData = DeviceDataResource::collection($graphQuery);
 

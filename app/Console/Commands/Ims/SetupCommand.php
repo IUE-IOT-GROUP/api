@@ -29,12 +29,19 @@ class SetupCommand extends Command
             file_get_contents(base_path('.env'))
         ));
 
-        User::create([
+        [$id, $token] = explode('|', $loginResponse['token']);
+
+        $loginResponse['token'] = $token;
+
+        $user = User::create([
             'id' => $loginResponse['id'],
-            'name' => $loginResponse['name'],
+            'name' => $loginResponse['username'],
             'email' => $loginResponse['email'],
             'password' => \Hash::make($password),
             'is_admin' => 0
         ]);
+
+        $user->id = $loginResponse['id'];
+        $user->save();
     }
 }

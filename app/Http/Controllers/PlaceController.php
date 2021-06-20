@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cloud\Cloud;
 use App\Http\Requests\Place\StoreRequest;
 use App\Http\Resources\Place\PlaceResource;
 use App\Models\Place;
@@ -35,7 +36,6 @@ class PlaceController extends Controller
         if ($request->filled('with'))
         {
             $with = explode(',', $request->with);
-            ray($with);
             $places = $places->with($with);
         }
 
@@ -51,6 +51,18 @@ class PlaceController extends Controller
         $place->user()->associate($request->user());
 
         $place->save();
+
+        if (isFog())
+        {
+            $fields = [];
+
+            foreach (Place::FIELDS as $field)
+            {
+                $fields[$field] = $place->{$field};
+            }
+
+            Cloud::post('places', $fields);
+        }
 
         return new PlaceResource($place);
     }

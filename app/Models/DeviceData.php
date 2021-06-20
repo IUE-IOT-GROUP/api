@@ -30,7 +30,6 @@ class DeviceData extends Model
 
     protected function serializeDate(DateTimeInterface $date)
     {
-        ray($date);
         return $date->format('Y-m-d H:i:s');
     }
 }
