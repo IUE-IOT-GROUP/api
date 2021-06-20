@@ -13,7 +13,10 @@ class Cloud
         if (! \Str::startsWith($uri, '/'))
             $uri = '/' . $uri;
 
-        $response = \Http::acceptJson()->post($url . $uri, $request);
+        $response = \Http::withOptions([
+            'verify' => false
+        ])->acceptJson()->post($url . $uri, $request);
+
         return $response->json();
     }
 }

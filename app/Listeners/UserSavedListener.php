@@ -23,8 +23,6 @@ class UserSavedListener
             $fields[$field] = $user->{$field};
         }
 
-        ray($fields);
-
         Cloud::post('users/fog', $fields);
     }
 }
