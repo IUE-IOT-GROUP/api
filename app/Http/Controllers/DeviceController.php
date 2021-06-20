@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cloud\Cloud;
 use App\Http\Requests\Device\StoreRequest;
 use App\Http\Resources\DeviceResource;
 use App\Models\Device;
@@ -25,21 +26,20 @@ class DeviceController extends Controller
         foreach ($request->parameters() as $type)
         {
             $p = isset($type['id'])
-                ? Parameter::find($type['id'])
+                ? Parameter::firstOrCreate(['id' => $type['id']], [
+                    'name' => $type['name'],
+                    'unit' => $type['unit'],
+                ])
                 : Parameter::firstOrCreate([
                     'name' => $type['name'],
                     'unit' => $type['unit'],
                 ]);
-
-            ray($p->id);
 
             $parameters[$p->id] = [
                 'id' => $type['pivot_id'] ?? '',
                 'expected_parameter' => $type['expected_parameter'],
             ];
         }
-
-        ray('parameters', $parameters);
 
         $device = new Device([
             'id' => $request->id(),
@@ -66,13 +66,16 @@ class DeviceController extends Controller
                 'name' => $parameter->name,
                 'unit' => $parameter->unit,
                 'pivot_id' => $parameter->parameters->id,
-                'expected_parameter' => $parameter->parameters->expected_parameter
+                'expected_parameter' => $parameter->parameters->expected_parameter,
             ];
         }
 
-        $a = array_merge($device->attributesToArray(), ['parameters' => $parameters]);
+        $deviceArray = array_merge($device->attributesToArray(), ['parameters' => $parameters]);
 
-        ray(json_encode($a));
+        if (isFog())
+        {
+            Cloud::post('devices', $deviceArray);
+        }
 
         return new DeviceResource($device);
     }
