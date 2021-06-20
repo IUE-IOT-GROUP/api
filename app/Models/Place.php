@@ -16,7 +16,7 @@ class Place extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $guarded = ['id'];
+    protected static $unguarded = true;
 
     public function user()
     {
@@ -33,8 +33,13 @@ class Place extends Model
         return $this->belongsTo(Place::class, 'parent_id');
     }
 
+    public function fogs()
+    {
+        return $this->hasMany(Fog::class);
+    }
+
     public function devices()
     {
-        return $this->hasMany(UserDevice::class);
+        return $this->hasMany(Device::class);
     }
 }

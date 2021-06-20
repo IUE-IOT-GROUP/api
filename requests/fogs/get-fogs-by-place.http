@@ -1,4 +1,4 @@
-GET {{url}}/userDevices/2
+GET {{url}}/places/4ee0ac27-2b1c-430a-b96b-903d223ca49c/fogs
 Authorization: Bearer {{auth_token}}
 Content-Type: application/json
 Accept: application/json

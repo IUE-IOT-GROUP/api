@@ -13,16 +13,16 @@ class DeviceParameter extends Pivot
     public $incrementing = false;
     protected $keyType = 'string';
 
-    protected $guarded = ['id'];
+    protected static $unguarded = true;
     protected $with = ['device'];
 
     public function device()
     {
-        return $this->belongsTo(UserDevice::class, 'user_device_id');
+        return $this->belongsTo(Device::class, 'device_id');
     }
 
     public function parameter()
     {
-        return $this->belongsTo(ParameterType::class, 'parameter_type_id');
+        return $this->belongsTo(Parameter::class, 'parameter_id');
     }
 }

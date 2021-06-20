@@ -4,8 +4,8 @@ namespace App\Http\Resources\Device;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-/** @mixin \App\Models\Device */
-class DeviceResource extends JsonResource
+/** @mixin \App\Models\DeviceType */
+class DeviceTypeResource extends JsonResource
 {
     /**
      * @param \Illuminate\Http\Request $request

@@ -16,7 +16,9 @@ trait HasUuidAsPrimaryKey
         static::creating(function (Model $model) {
             $model->setKeyType('string');
             $model->setIncrementing(false);
-            $model->setAttribute($model->getKeyName(), Uuid::uuid4());
+
+            if ($model->isGuarded('id'))
+                $model->setAttribute($model->getKeyName(), Uuid::uuid4());
         });
     }
 }

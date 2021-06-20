@@ -1,0 +1,19 @@
+POST {{url}}/devices
+Authorization: Bearer {{auth_token}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "fog_id": "1375de90-a4a6-4971-b3fa-300231b5b069",
+    "place_id": "0acc3908-35b7-464a-ba42-a86efc3ba208",
+    "mac_address": "3C-F0-11-3F-B3-D6",
+    "ip_address": "192.168.0.25",
+    "name": "HC-SR04",
+    "device_type_id": "ba84e9fe-5d53-4b40-871d-5894058bdbfd",
+    "parameters": {
+        "distance": {
+            "name": "Distance",
+            "unit": "centimeter"
+        }
+    }
+}

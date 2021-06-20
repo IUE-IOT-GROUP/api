@@ -4,13 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateActionsTable extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+return new class extends Migration {
     public function up()
     {
         Schema::create('actions', function (Blueprint $table) {
@@ -18,16 +12,14 @@ class CreateActionsTable extends Migration
             $table->morphs('loggable');
             $table->string('action');
             $table->timestamps();
+
+            $table->boolean('is_synchronized')->default(false);
+            $table->timestamp('synchronization_time')->nullable();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('actions');
     }
-}
+};

@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use App\Http\Resources\DeviceDataResource;
 use App\Models\DeviceData;
 use App\Models\DeviceParameter;
-use App\Models\ParameterType;
-use App\Models\UserDevice;
+use App\Models\Parameter;
+use App\Models\Device;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class DataController extends Controller
         abort(501);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, User $user)
     {
         $request->validate([
             'mac_address' => ['required', 'regex:/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/'],
@@ -26,10 +27,10 @@ class DataController extends Controller
 
         if (filled($request->mac_address)) {
             // get the device with the given mac address
-            $devices = UserDevice::whereMacAddress($request->mac_address)->get();
+            $devices = $user->devices()->whereMacAddress($request->mac_address)->get();
 
             // there might be multiple devices with the same mac address
-            $devices->each(function (UserDevice $device) use ($request) {
+            $devices->each(function (Device $device) use ($request) {
                 // look for the parameters except the mac address
                 foreach ($request->except('mac_address') as $parameter => $value) {
                     // find the user parameters related to device with the expected parameter
@@ -44,8 +45,8 @@ class DataController extends Controller
                         $device_parameters = $device_parameters->parameters;
 
                         $data = new DeviceData();
-                        $data->user_device_id = $device->id;
-                        $data->parameter_type_user_device_id = $device_parameters->id;
+                        $data->device_id = $device->id;
+                        $data->device_parameter_id = $device_parameters->id;
                         $data->value = $value;
                         $data->save();
                     }
@@ -58,11 +59,11 @@ class DataController extends Controller
         return $this->error('An error has occurred.', 400);
     }
 
-    public function show(UserDevice $device): \Illuminate\Http\JsonResponse
+    public function show(Device $device): \Illuminate\Http\JsonResponse
     {
         $data = [];
 
-        $device->parameters->each(function (ParameterType $type) use (&$data) {
+        $device->parameters->each(function (Parameter $type) use (&$data) {
             $latest = DeviceData::where('device_parameter_id', $type->parameters->id)->take(1)->latest()->first();
 
             $details['details'] = [
@@ -88,7 +89,7 @@ class DataController extends Controller
                 $collectedData = DeviceDataResource::collection($query->get());
 
                 $graphQuery = $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')')
-                    ->select([\DB::raw('AVG(value) AS value'), 'user_device_id', 'device_parameter_id', \DB::raw('MIN(created_at) as created_at')])
+                    ->select([\DB::raw('AVG(value) AS value'), 'device_id', 'device_parameter_id', \DB::raw('MIN(created_at) as created_at')])
                     ->get();
 
                 $graphData = DeviceDataResource::collection($graphQuery);
@@ -110,12 +111,14 @@ class DataController extends Controller
         return response()->json($data);
     }
 
-    public function showParameter(Request $request, UserDevice $device, DeviceParameter $type): \Illuminate\Http\JsonResponse
+    public function showParameter(Request $request, Device $device, DeviceParameter $type): \Illuminate\Http\JsonResponse
     {
         $period = $request->input('period', 'daily');
         ray()->clearScreen();
         $data = [];
         $latest = DeviceData::where('device_parameter_id', $type->id)->take(1)->latest()->first();
+
+        ray($type)->blue();
 
         $details['details'] = [
             'device_parameter_id' => $type->id,
@@ -134,7 +137,7 @@ class DataController extends Controller
 
             $query = DeviceData::query()
                 ->where('device_parameter_id', $type->id)
-                ->where('user_device_id', $device->id)
+                ->where('device_id', $device->id)
                 ->when($period, function (Builder $query, $value) use ($yesterday) {
                     return match ($value) {
                         'weekly' => $query->where('created_at', '>', $yesterday->subDays(7)),
@@ -153,7 +156,7 @@ class DataController extends Controller
                     default => $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')'),
                 };
             })
-                ->select([\DB::raw('MAX(id) AS id, AVG(value) AS value'), 'user_device_id', 'device_parameter_id', \DB::raw('MIN(created_at) as created_at')])
+                ->select([\DB::raw('MAX(id) AS id, AVG(value) AS value'), 'device_id', 'device_parameter_id', \DB::raw('MIN(created_at) as created_at')])
                 ->tap(function ($query) {
                     ray(\Str::replaceArray('?', $query->getBindings(), $query->toSql()))->blue();
                 })

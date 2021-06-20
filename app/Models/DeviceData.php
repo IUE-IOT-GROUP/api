@@ -15,12 +15,12 @@ class DeviceData extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $guarded = ['id'];
+    protected static $unguarded = true;
     protected $with = ['parameter', 'device'];
 
     public function device()
     {
-        return $this->belongsTo(UserDevice::class, 'user_device_id', 'id');
+        return $this->belongsTo(Device::class, 'user_device_id', 'id');
     }
 
     public function parameter()

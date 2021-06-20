@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\DeviceDataResource;
 use App\Models\DeviceData;
-use App\Models\ParameterType;
+use App\Models\Parameter;
 use App\Models\User;
-use App\Models\UserDevice;
+use App\Models\Device;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Faker\Factory;
@@ -36,10 +36,10 @@ class TestController extends Controller
         }
     }
 
-    public function getDeviceData(UserDevice $device)
+    public function getDeviceData(Device $device)
     {
         $data = [];
-        $device->parameters->each(function (ParameterType $type) use (&$data) {
+        $device->parameters->each(function (Parameter $type) use (&$data) {
             $query = DeviceData::where('parameter_type_user_device_id', $type->parameters->id)
                     ->orderByDesc('created_at')
                     ->take(24)

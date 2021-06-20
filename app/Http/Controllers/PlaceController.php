@@ -29,9 +29,15 @@ class PlaceController extends Controller
 
     public function index(Request $request): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
     {
-        return PlaceResource::collection(
-            $request->user()->places()->whereParentId(null)->with(['children', 'devices'])->get()
-        );
+        $places = $request->user()->places()->whereParentId(null);
+
+        if ($request->filled('with')) {
+            $with = explode(',', $request->with);
+            ray($with);
+            $places = $places->with($with);
+        }
+
+        return PlaceResource::collection($places->get());
     }
 
     public function store(Request $request)
@@ -61,7 +67,7 @@ class PlaceController extends Controller
 
     public function show(Request $request, Place $place)
     {
-        $place->load(['children', 'devices', 'children.children', 'children.devices']);
+        $place->load(['children', 'fogs', 'devices', 'children.children', 'children.fogs', 'children.devices']);
 
         return new PlaceResource($place);
     }
@@ -99,5 +105,12 @@ class PlaceController extends Controller
 
 
         return $this->success();
+    }
+
+    public function fogs()
+    {
+        $places = Place::has('fogs')->with('fogs')->get();
+
+        return PlaceResource::collection($places);
     }
 }

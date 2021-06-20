@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\HasUuidAsPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -14,15 +15,9 @@ class User extends Authenticatable
     use HasFactory, Notifiable, HasApiTokens;
     use HasUuidAsPrimaryKey;
 
-    protected $keyType = 'string';
     public $incrementing = false;
-
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'is_admin',
-    ];
+    protected $keyType = 'string';
+    protected static $unguarded = true;
 
     protected $hidden = [
         'password',
@@ -35,7 +30,7 @@ class User extends Authenticatable
         'is_admin' => 'boolean',
     ];
 
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->is_admin;
     }
@@ -45,8 +40,13 @@ class User extends Authenticatable
         return $this->hasMany(Place::class);
     }
 
+    public function fogs(): HasMany
+    {
+        return $this->hasMany(Fog::class);
+    }
+
     public function devices(): HasMany
     {
-        return $this->hasMany(UserDevice::class);
+        return $this->hasMany(Device::class);
     }
 }

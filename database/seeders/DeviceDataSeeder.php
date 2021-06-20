@@ -27,7 +27,7 @@ class DeviceDataSeeder extends Seeder
                 foreach ($interval as $time) {
                     DeviceData::create([
                         'device_parameter_id' => $parameter->parameters->id,
-                        'user_device_id' => $device->id,
+                        'device_id' => $device->id,
                         'value' => $faker->numberBetween(25, 40),
                         'created_at' => $time,
                     ]);

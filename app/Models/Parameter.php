@@ -6,7 +6,7 @@ use App\Traits\HasUuidAsPrimaryKey;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ParameterType extends Model
+class Parameter extends Model
 {
     use HasFactory;
     use HasUuidAsPrimaryKey;
@@ -14,11 +14,11 @@ class ParameterType extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
-    protected $guarded = ['id'];
+    protected static $unguarded = true;
 
     public function device()
     {
-        return $this->belongsToMany(UserDevice::class, DeviceParameter::TABLE_NAME)
+        return $this->belongsToMany(Device::class, DeviceParameter::TABLE_NAME)
             ->as('devices')
             ->withPivot('id', 'expected_parameter')
             ->withTimestamps()

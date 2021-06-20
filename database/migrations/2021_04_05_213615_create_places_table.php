@@ -4,13 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePlacesTable extends Migration
-{
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
+return new class extends Migration {
     public function up()
     {
         Schema::create('places', function (Blueprint $table) {
@@ -20,16 +14,14 @@ class CreatePlacesTable extends Migration
             $table->uuid('parent_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->boolean('is_synchronized')->default(false);
+            $table->timestamp('synchronization_time')->nullable();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('places');
     }
-}
+};

@@ -9,10 +9,13 @@ return new class extends Migration {
     {
         Schema::create('device_parameter', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_device_id')->constrained('user_devices')->onDelete('cascade');
-            $table->foreignUuid('parameter_type_id')->constrained('parameter_types');
+            $table->foreignUuid('device_id')->constrained('devices')->onDelete('cascade');
+            $table->foreignUuid('parameter_id')->constrained('parameters');
             $table->string('expected_parameter')->nullable();
             $table->timestamps();
+
+            $table->boolean('is_synchronized')->default(false);
+            $table->timestamp('synchronization_time')->nullable();
         });
     }
 
