@@ -31,7 +31,7 @@ class DeviceResource extends JsonResource
 
 
             'parameters' => ParameterResource::collection($this->whenLoaded('parameters')),
-            'device_type' => new DeviceTypeResource($this->whenLoaded('device_type')),
+            'device_type' => new DeviceTypeResource($this->whenLoaded('deviceType')),
             'place' => new PlaceResource($this->whenLoaded('place')),
         ];
     }

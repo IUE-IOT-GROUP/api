@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Device\StoreRequest;
 use App\Http\Resources\DeviceResource;
-use App\Models\DeviceType;
-use App\Models\Fog;
+use App\Models\Device;
 use App\Models\Parameter;
 use App\Models\Place;
-use App\Models\Device;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -21,77 +19,62 @@ class DeviceController extends Controller
         return DeviceResource::collection($devices);
     }
 
-    public function store(Request $request)
+    public function store(StoreRequest $request): DeviceResource
     {
-        $request->validate([
-            'name' => ['required'],
-            'fog_id' => ['bail', 'required', Rule::exists('fogs', 'id'), function ($attribute, $value, $fail) use ($request) {
-                $exists = Fog::where('id', $request->fog_id)->where('user_id', $request->user()->id)->exists();
-                if (!$exists)
-                {
-                    $fail('The given place cannot be found');
-                }
-            }],
-            'place_id' => ['bail', 'required', Rule::exists('places', 'id'), function ($attribute, $value, $fail) use ($request) {
-                $exists = Place::where('id', $request->place_id)->where('user_id', $request->user()->id)->exists();
-                if (!$exists)
-                {
-                    $fail('The given place cannot be found');
-                }
-            }],
-            'device_type_id' => ['nullable', Rule::unique('devices')->where(function (Builder $query) use ($request) {
-                return $query->where([
-                    ['mac_address', '=', $request->mac_address],
-                    ['ip_address', '=', $request->ip_address],
-                    ['device_type_id', '=', $request->device_type_id],
-                    ['fog_id', '=', $request->fog_id],
-                ]);
-            })],
-            'mac_address' => ['required'],
-            'ip_address' => ['required'],
-            'parameters' => ['required', 'array'],
-        ], [
-            'fog_id.exists' => 'The given place does not exist.',
-            'device_id.unique' => 'The given device is already available within the same place',
-        ]);
-
         $parameters = [];
-        foreach ($request->parameters as $type)
+        foreach ($request->parameters() as $type)
         {
-            $p = Parameter::firstOrCreate([
-                'name' => $type['name'],
-                'unit' => $type['unit'],
-            ]);
+            $p = isset($type['id'])
+                ? Parameter::find($type['id'])
+                : Parameter::firstOrCreate([
+                    'name' => $type['name'],
+                    'unit' => $type['unit'],
+                ]);
+
+            ray($p->id);
 
             $parameters[$p->id] = [
+                'id' => $type['pivot_id'] ?? '',
                 'expected_parameter' => $type['expected_parameter'],
             ];
         }
 
-        if (!is_null($request->device_type_id))
+        ray('parameters', $parameters);
+
+        $device = new Device([
+            'id' => $request->id(),
+            'name' => $request->name(),
+            'mac_address' => $request->macAddress(),
+            'ip_address' => $request->ipAddress(),
+        ]);
+
+        $device->user()->associate($request->user());
+        $device->fog()->associate($request->fog());
+        $device->place()->associate($request->place());
+        $device->deviceType()->associate($request->deviceType());
+
+        $device->save();
+        $device->parameters()->attach($parameters);
+
+        $device->load('parameters');
+
+        $parameters = [];
+        foreach ($device->parameters as $parameter)
         {
-            $device = DeviceType::find($request->device_type_id);
+            $parameters[] = [
+                'id' => $parameter->id,
+                'name' => $parameter->name,
+                'unit' => $parameter->unit,
+                'pivot_id' => $parameter->parameters->id,
+                'expected_parameter' => $parameter->parameters->expected_parameter
+            ];
         }
-        else
-        {
-            $device = new DeviceType();
-            $device->name = $request->name;
-            $device->save();
-        }
 
-        $userDevice = new Device;
-        $userDevice->name = $request->name;
-        $userDevice->mac_address = $request->mac_address;
-        $userDevice->ip_address = $request->ip_address;
-        $userDevice->user_id = $request->user()->id;
-        $userDevice->fog_id = $request->fog_id;
-        $userDevice->place_id = $request->place_id;
-        $userDevice->device_type_id = $device->id;
-        $userDevice->save();
+        $a = array_merge($device->attributesToArray(), ['parameters' => $parameters]);
 
-        $userDevice->parameters()->attach($parameters);
+        ray(json_encode($a));
 
-        return new DeviceResource($userDevice);
+        return new DeviceResource($device);
     }
 
     public function show(Device $device): DeviceResource

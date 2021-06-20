@@ -53,7 +53,7 @@ class UpdateRequest extends FormRequest
 
     public function place(): ?Place
     {
-        return $this->findPlace($this->get('parent_id'));
+        return $this->findPlace($this->get('place_id'));
     }
 
     private function findPlace(string $id): ?Place
