@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\DeviceDataResource;
+use App\Models\Device;
 use App\Models\DeviceData;
 use App\Models\DeviceParameter;
 use App\Models\Parameter;
-use App\Models\Device;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -25,14 +25,16 @@ class DataController extends Controller
             'mac_address' => ['required', 'regex:/^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$/'],
         ]);
 
-        if (filled($request->mac_address)) {
+        if (filled($request->mac_address))
+        {
             // get the device with the given mac address
             $devices = $user->devices()->whereMacAddress($request->mac_address)->get();
 
             // there might be multiple devices with the same mac address
             $devices->each(function (Device $device) use ($request) {
                 // look for the parameters except the mac address
-                foreach ($request->except('mac_address') as $parameter => $value) {
+                foreach ($request->except('mac_address') as $parameter => $value)
+                {
                     // find the user parameters related to device with the expected parameter
                     $device_parameters = $device->parameters()->wherePivot('expected_parameter', $parameter);
 
@@ -40,7 +42,8 @@ class DataController extends Controller
                     $device_parameters = $device_parameters->get()->first();
 
                     // if parameters are found process them
-                    if (!is_null($device_parameters)) {
+                    if (!is_null($device_parameters))
+                    {
                         // we need the id of the pivot table
                         $device_parameters = $device_parameters->parameters;
 
@@ -74,12 +77,15 @@ class DataController extends Controller
             ];
             $returningGraphData = [];
 
-            if (!is_null($latest)) {
+            if (!is_null($latest))
+            {
                 $yesterday = Carbon::now();
 
                 // if the latest data is before yesterday, load graph data by the latest data
                 if ($latest->created_at->diff($yesterday)->days >= 1)
+                {
                     $yesterday = $latest->created_at;
+                }
 
                 $query = DeviceData::query()
                     ->where('device_parameter_id', $type->parameters->id)
@@ -95,6 +101,9 @@ class DataController extends Controller
                 $graphData = DeviceDataResource::collection($graphQuery);
 
                 $returningGraphData = [
+                    'average' => $collectedData->avg('value'),
+                    'min' => $collectedData->min('value'),
+                    'max' => $collectedData->max('value'),
                     'min_y' => $graphData->min('value'),
                     'max_y' => $graphData->max('value'),
                     'min_x' => $graphQuery->min('created_at')->format('Y-m-d H:i:s'),
@@ -125,18 +134,22 @@ class DataController extends Controller
         ];
         $returningGraphData = [];
 
-        if (!is_null($latest)) {
+        if (!is_null($latest))
+        {
             $yesterday = Carbon::now();
 
             // if the latest data is before yesterday, load graph data by the latest data
             if ($latest->created_at->diff($yesterday)->days >= 1)
+            {
                 $yesterday = $latest->created_at;
+            }
 
             $query = DeviceData::query()
                 ->where('device_parameter_id', $type->id)
                 ->where('device_id', $device->id)
                 ->when($period, function (Builder $query, $value) use ($yesterday) {
-                    return match ($value) {
+                    return match ($value)
+                    {
                         'weekly' => $query->where('created_at', '>', $yesterday->subDays(7)),
                         'monthly' => $query->where('created_at', '>=', $yesterday->subMonths())->take(5),
                         default => $query->where('created_at', '>=', $yesterday->subDays()),
@@ -147,7 +160,8 @@ class DataController extends Controller
             $collectedData = DeviceDataResource::collection($query->get());
 
             $graphQuery = $query->when($period, function (Builder $query, $value) {
-                return match ($value) {
+                return match ($value)
+                {
                     'weekly' => $query->groupByRaw('date_format(created_at, \'%Y%m%d\')'),
                     'monthly' => $query->groupByRaw('date_format(created_at, \'%u\')')->take(5),
                     default => $query->groupByRaw('date_format(created_at, \'%Y%m%d%H\')'),
@@ -162,6 +176,9 @@ class DataController extends Controller
             $graphData = DeviceDataResource::collection($graphQuery);
 
             $returningGraphData = [
+                'average' => $collectedData->avg('value'),
+                'min' => $collectedData->min('value'),
+                'max' => $collectedData->max('value'),
                 'min_y' => $graphData->min('value'),
                 'max_y' => $graphData->max('value'),
                 'min_x' => $graphQuery->min('created_at')->format('Y-m-d H:i:s'),

@@ -9,7 +9,7 @@ use Illuminate\Console\Command;
 
 class SynchronizeCommand extends Command
 {
-    protected $signature = 'ims:synch';
+    protected $signature = 'ims:sync';
 
     protected $description = 'Command description';
 
@@ -17,14 +17,13 @@ class SynchronizeCommand extends Command
     {
         $data = DeviceData::whereIsSynchronized(false)->without(['parameter', 'device']);
 
-        $resp = Cloud::post('cloud/data', ['data' => $data->get()]);
+        $data->chunk(500, function ($deviceData) {
+            $resp = Cloud::post('cloud/data', ['data' => $deviceData]);
 
-        ray($resp);
-
-        $data->update([
-            'is_synchronized' => true,
-            'synchronization_time' => Carbon::now(),
-        ]);
-
+            $deviceData->each->update([
+                'is_synchronized' => true,
+                'synchronization_time' => Carbon::now(),
+            ]);
+        });
     }
 }
