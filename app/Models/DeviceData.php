@@ -19,6 +19,10 @@ class DeviceData extends Model
     protected $guarded = false;
     protected $with = ['parameter', 'device'];
 
+    protected $casts = [
+        'value' => 'float',
+    ];
+
     public function device()
     {
         return $this->belongsTo(Device::class, 'user_device_id', 'id');
