@@ -56,7 +56,6 @@ class PlaceController extends Controller
 
         if (isFog())
         {
-            ray($place->attributesToArray());
             Cloud::post('places', $place->attributesToArray());
         }
 

@@ -15,7 +15,7 @@ class DeviceDataSeeder extends Seeder
     {
         $faker = Factory::create();
 
-        $since = Carbon::parse('2021-06-21 00:15:53');
+        $since = Carbon::now()->subMonths();
         $until = Carbon::now();
 
         $interval = collect(CarbonPeriod::since($since)->minutes(5)->until($until));
